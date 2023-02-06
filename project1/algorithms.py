@@ -1,21 +1,21 @@
-class NaiveBayes:
+class Predictor:
 
-    def __init__(self):
+    def predict(features):
         pass
 
-    def train(input_data, expected):
+
+class NaiveBayes(Predictor):
+
+    def __init__(self, train_set):
         pass
 
     def predict(features):
         return 1
 
 
-class LogisticRegression:
+class LogisticRegression(Predictor):
 
-    def __init__(self):
-        pass
-
-    def train(input_data, expected):
+    def __init__(self, train_set):
         pass
 
     def predict(features):
