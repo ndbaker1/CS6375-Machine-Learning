@@ -50,8 +50,13 @@ def test_accuracy(predictor, test_input, test_expected):
     return sum(1 for _ in correct_predictions) / len(test_input)
 
 
+from sys import argv
+# allow custom paths for dataset.
+# not required
+dataset_parent = "./datasets" if len(argv) <= 1 else argv[1]
+
 # Gather statistics for each dataset based on the classification Algorithm
-for dataset_dir in (d.path for d in os.scandir("./datasets") if d.is_dir()):
+for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
 
     print("\nDataset: <{}>".format(dataset_dir))
 
