@@ -1,26 +1,13 @@
 import os
 import algorithms
-import models
 
-import sklearn
-
-
-def test_accuracy(predictor, test_input, test_expected):
-
-    accuracy = 0
-
-    # Use Classifier to predict the results
-    for features, expected in zip(test_input, test_expected):
-        actual = predictor.predict(features)
-        if actual == expected:
-            accuracy += 1
-
-    return accuracy / len(test_input)
+from sklearn.linear_model import SGDClassifier
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 def parse_dataset_records(dataset_dir):
 
-    dataset_encoding = "utf-8"
+    dataset_encoding = "unicode_escape"
 
     train_set_x, train_set_y = list(), list()
     test_set_x, test_set_y = list(), list()
@@ -32,7 +19,6 @@ def parse_dataset_records(dataset_dir):
 
     for test_file in (x.path for x in os.scandir(dataset_dir + "/test/spam")):
         with open(test_file, encoding=dataset_encoding) as test_data:
-            print(test_file)
             test_set_x.append(test_data.read())
             test_set_y.append(1)
 
@@ -49,38 +35,60 @@ def parse_dataset_records(dataset_dir):
 
     return (
         (train_set_x, train_set_y),
-        (test_set_x, train_set_y),
+        (test_set_x, test_set_y),
     )
+
+
+def test_accuracy(predictor, test_input, test_expected):
+    # Use Classifier to predict the results
+    predictions = predictor.predict(test_input)
+    correct_predictions = filter(
+        lambda v: v[0] == v[1],
+        zip(predictions, test_expected),
+    )
+
+    return sum(1 for _ in correct_predictions) / len(test_input)
 
 
 # Gather statistics for each dataset based on the classification Algorithm
 for dataset_dir in (d.path for d in os.scandir("./datasets") if d.is_dir()):
 
-    print("dataset: <{}>".format(dataset_dir))
+    print("\nDataset: <{}>".format(dataset_dir))
 
     # get train/test sets from dataset files
     (train_x, train_y), (test_x, test_y) = parse_dataset_records(dataset_dir)
 
     # Load datasets into model types
-    data_models = {
-        "Bernoulli": (
-            models.bernoulli(train_x),
-            models.bernoulli(test_x),
-        ),
-        "BagOfWords": (
-            models.bag_of_words(train_x),
-            models.bag_of_words(test_x),
-        ),
-    }
+    data_models = dict()
 
-    print(data_models)
-    input("pause..")
+    # Compute BagOfWords and Bernoulli Model of Dataset using sklearn CountVectorizer.
+    #
+    # The Vectorizer is fit to the training data before transforming the
+    # test data, that way both train and test features will be the same
+    # for running a classifier which takes a fixes set of features.
+    #
+    # In the case of Bernoulli, the CountVectorizer must be set to 'binary',
+    # which will output 1 if a feature is present, regardless of frequency.
+
+    binary_vectorizer = CountVectorizer(stop_words="english", binary=True)
+
+    data_models["Bernoulli"] = (
+        binary_vectorizer.fit_transform(train_x).toarray(),
+        binary_vectorizer.transform(test_x).toarray(),
+    )
+
+    count_vectorizer = CountVectorizer(stop_words="english")
+
+    data_models["BagOfWords"] = (
+        count_vectorizer.fit_transform(train_x).toarray(),
+        count_vectorizer.transform(test_x).toarray(),
+    )
 
     # Naive Bayes
-    for model, (train_set, test_set) in [data_models["BagOfWords"]]:
+    for (train_set, test_set) in [data_models["BagOfWords"]]:
         print("Naive Bayes <BagOfWords> Accuracy: {}".format(
             test_accuracy(
-                algorithms.NaiveBayes(train_set, train_y),
+                algorithms.NaiveBayesClassifier(train_set, train_y),
                 test_set,
                 test_y,
             )))
@@ -90,7 +98,7 @@ for dataset_dir in (d.path for d in os.scandir("./datasets") if d.is_dir()):
         print("MCAP Logistic Regression <{}> Accuracy: {}".format(
             model,
             test_accuracy(
-                algorithms.LogisticRegression(train_set, train_x),
+                algorithms.LogisticRegressionClassifier(train_set, train_y),
                 test_set,
                 test_y,
             ),
@@ -101,7 +109,7 @@ for dataset_dir in (d.path for d in os.scandir("./datasets") if d.is_dir()):
         print("SGD Classifier <{}> Accruacy: {}".format(
             model,
             test_accuracy(
-                sklearn.linear_model.SGDClassifier().fit(train_set, train_y),
+                SGDClassifier().fit(train_set, train_y),
                 test_set,
                 test_y,
             ),
