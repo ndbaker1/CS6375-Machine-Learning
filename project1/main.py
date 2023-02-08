@@ -40,15 +40,28 @@ def parse_dataset_records(dataset_dir):
 
 
 def test_accuracy(predictor, test_input, test_expected):
-    ''' Use Classifier `.predict` and compute accuracy with the labelled dataset '''
+    ''' Use Classifier `.predict` and compute metrics with the labelled dataset '''
 
     predictions = predictor.predict(test_input)
-    correct_predictions = filter(
-        lambda v: v[0] == v[1],
-        zip(predictions, test_expected),
-    )
+    correct_predictions = [
+        pre for pre, act in zip(predictions, test_expected) if pre == act
+    ]
 
-    return sum(1 for _ in correct_predictions) / len(test_input)
+    predicted_positive = sum(1 for c in predictions if c == 1)
+    actual_positive = sum(1 for c in test_expected if c == 1)
+    true_positive = sum(1 for c in correct_predictions if c == 1)
+
+    accuracy = len(correct_predictions) / len(test_input)
+    precision = true_positive / predicted_positive
+    recall = true_positive / actual_positive
+    f1_score = 2 * (precision * recall) / (precision + recall)
+
+    print("Accuracy: {}, Precision: {}, Recall: {}, F1: {}".format(
+        accuracy,
+        precision,
+        recall,
+        f1_score,
+    ))
 
 
 from sys import argv
@@ -92,40 +105,36 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
 
     # Naive Bayes Multinomial
     for (train_set, test_set) in [data_models["BagOfWords"]]:
-        print("Multinomial Naive Bayes <BagOfWords> Accuracy: {}".format(
-            test_accuracy(
-                algorithms.MultinomialNBClassifier(train_set, train_y),
-                test_set,
-                test_y,
-            )))
+        print("Multinomial Naive Bayes <BagOfWords>")
+        test_accuracy(
+            algorithms.MultinomialNBClassifier(train_set, train_y),
+            test_set,
+            test_y,
+        )
 
     # Naive Bayes Discrete
     for (train_set, test_set) in [data_models["Bernoulli"]]:
-        print("Discrete Naive Bayes <Bernoulli> Accuracy: {}".format(
-            test_accuracy(
-                algorithms.DiscreteNBClassifier(train_set, train_y),
-                test_set,
-                test_y,
-            )))
+        print("Discrete Naive Bayes <Bernoulli>")
+        test_accuracy(
+            algorithms.DiscreteNBClassifier(train_set, train_y),
+            test_set,
+            test_y,
+        )
 
     # MCAP Logistic Regression
     for model, (train_set, test_set) in data_models.items():
-        print("MCAP Logistic Regression <{}> Accuracy: {}".format(
-            model,
-            test_accuracy(
-                algorithms.LogisticRegressionClassifier(train_set, train_y),
-                test_set,
-                test_y,
-            ),
-        ))
+        print("MCAP Logistic Regression <{}>".format(model))
+        test_accuracy(
+            algorithms.LogisticRegressionClassifier(train_set, train_y),
+            test_set,
+            test_y,
+        )
 
     # SGDClassifier
     for model, (train_set, test_set) in data_models.items():
-        print("SGD Classifier <{}> Accruacy: {}".format(
-            model,
-            test_accuracy(
-                SGDClassifier().fit(train_set, train_y),
-                test_set,
-                test_y,
-            ),
-        ))
+        print("SGD Classifier <{}>".format(model))
+        test_accuracy(
+            SGDClassifier().fit(train_set, train_y),
+            test_set,
+            test_y,
+        )
