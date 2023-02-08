@@ -52,9 +52,11 @@ def test_accuracy(predictor, test_input, test_expected):
     true_positive = sum(1 for c in correct_predictions if c == 1)
 
     accuracy = len(correct_predictions) / len(test_input)
-    precision = true_positive / predicted_positive
-    recall = true_positive / actual_positive
-    f1_score = 2 * (precision * recall) / (precision + recall)
+    precision = 0 if predicted_positive == 0 else true_positive / predicted_positive
+    recall = 0 if actual_positive == 0 else true_positive / actual_positive
+    f1_score = 0 if (
+        precision +
+        recall) == 0 else 2 * (precision * recall) / (precision + recall)
 
     print("Accuracy: {}, Precision: {}, Recall: {}, F1: {}".format(
         accuracy,
@@ -62,6 +64,28 @@ def test_accuracy(predictor, test_input, test_expected):
         recall,
         f1_score,
     ))
+
+
+def classifier_runner(classifier_name, classifier_constructor, data_models):
+    for model, (train_set, test_set) in data_models.items():
+        print("{} <{}>".format(classifier_name, model))
+        test_accuracy(
+            classifier_constructor(train_set, train_y),
+            test_set,
+            test_y,
+        )
+
+
+def top_k_vectorizer(vectorizer, train_data, k=100):
+    train_vectorized = vectorizer.fit_transform(train_data)
+    words_sorted = sorted(((word, train_vectorized.sum(axis=0)[0, idx])
+                           for word, idx in vectorizer.vocabulary_.items()),
+                          key=lambda x: x[1],
+                          reverse=True)
+
+    top_k = (word for word, _ in words_sorted[:k])
+    vectorizer.fit(top_k)
+    return vectorizer
 
 
 from sys import argv
@@ -89,52 +113,52 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     # In the case of Bernoulli, the CountVectorizer must be set to 'binary',
     # which will output 1 if a feature is present, regardless of frequency.
 
-    binary_vectorizer = CountVectorizer(stop_words="english", binary=True)
+    binary_vectorizer = top_k_vectorizer(
+        CountVectorizer(stop_words="english", binary=True),
+        train_data=train_x,
+        k=200,
+    )
 
     data_models["Bernoulli"] = (
-        binary_vectorizer.fit_transform(train_x).toarray(),
+        binary_vectorizer.transform(train_x).toarray(),
         binary_vectorizer.transform(test_x).toarray(),
     )
 
-    count_vectorizer = CountVectorizer(stop_words="english")
+    bow_vectorizer = top_k_vectorizer(
+        CountVectorizer(stop_words="english"),
+        train_data=train_x,
+        k=200,
+    )
 
     data_models["BagOfWords"] = (
-        count_vectorizer.fit_transform(train_x).toarray(),
-        count_vectorizer.transform(test_x).toarray(),
+        bow_vectorizer.transform(train_x).toarray(),
+        bow_vectorizer.transform(test_x).toarray(),
     )
 
     # Naive Bayes Multinomial
-    for (train_set, test_set) in [data_models["BagOfWords"]]:
-        print("Multinomial Naive Bayes <BagOfWords>")
-        test_accuracy(
-            algorithms.MultinomialNBClassifier(train_set, train_y),
-            test_set,
-            test_y,
-        )
+    classifier_runner(
+        "Multinomial Naive Bayes",
+        algorithms.MultinomialNBClassifier,
+        {"BagOfWords": data_models["BagOfWords"]},
+    )
 
     # Naive Bayes Discrete
-    for (train_set, test_set) in [data_models["Bernoulli"]]:
-        print("Discrete Naive Bayes <Bernoulli>")
-        test_accuracy(
-            algorithms.DiscreteNBClassifier(train_set, train_y),
-            test_set,
-            test_y,
-        )
+    classifier_runner(
+        "Discrete Naive Bayes",
+        algorithms.DiscreteNBClassifier,
+        {"Bernoulli": data_models["Bernoulli"]},
+    )
 
     # MCAP Logistic Regression
-    for model, (train_set, test_set) in data_models.items():
-        print("MCAP Logistic Regression <{}>".format(model))
-        test_accuracy(
-            algorithms.LogisticRegressionClassifier(train_set, train_y),
-            test_set,
-            test_y,
-        )
+    classifier_runner(
+        "MCAP Logistic Regression",
+        algorithms.LogisticRegressionClassifier,
+        data_models,
+    )
 
     # SGDClassifier
-    for model, (train_set, test_set) in data_models.items():
-        print("SGD Classifier <{}>".format(model))
-        test_accuracy(
-            SGDClassifier().fit(train_set, train_y),
-            test_set,
-            test_y,
-        )
+    classifier_runner(
+        "SGD Classifier",
+        SGDClassifier().fit,
+        data_models,
+    )

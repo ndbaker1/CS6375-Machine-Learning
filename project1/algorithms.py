@@ -119,13 +119,13 @@ class LogisticRegressionClassifier(Predictor):
         assert len(train_x) > 0
 
         # TODO - learn this somehow using a 70/30 train/validation split
-        mcap_factor = 0.05
-        learning_rate = 0.001
+        mcap_factor = 0.005
+        learning_rate = 0.01
 
         self.feature_ptrs = range(len(train_x[0]))
 
         # initialize random weights
-        random_weight = lambda: (random.random() * 2) - 1
+        random_weight = lambda: random.random() - 0.5
         self.weights = [random_weight()]
         for _ in self.feature_ptrs:
             self.weights.append(random_weight())
@@ -175,5 +175,5 @@ class LogisticRegressionClassifier(Predictor):
         return predictions
 
     def sigmoid(self, x):
-        y = exp(x)
-        return y / (1 + y)
+        # always use the variation which results in small numbers
+        return exp(x) / (1 + exp(x)) if x < 0 else 1 / (1 + exp(-x))
