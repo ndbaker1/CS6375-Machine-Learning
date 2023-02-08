@@ -1,4 +1,6 @@
+from math import log, exp
 from abc import ABC, abstractmethod
+from collections import defaultdict
 
 
 class Predictor(ABC):
@@ -14,50 +16,47 @@ class NaiveBayesClassifier(Predictor):
         # test input present
         assert len(train_x) > 0
 
-        training_samples = len(train_x)
-        training_features = len(train_x[0])
+        self.feature_ptrs = range(len(train_x[0]))
+        self.prior = dict()
+        self.condprob = defaultdict(dict)
+        self.classes = set(train_y)
 
-        # probabilities for each feature (multinomial)
-        self.feature_p_set = [0.0] * training_features
+        for c in self.classes:
+            class_samples = list(sample for i, sample in enumerate(train_x)
+                                 if train_y[i] == c)
+            self.prior[c] = len(class_samples)
 
-        # compute the weight that each word has per document
-        for feature_vec, class_label in zip(train_x, train_y):
-            # find document word count
-            total_feature_count = sum(feature_vec)
-            # if the class falls into "p", then add the weight.
-            # this will innately give us "1-p" as well.
-            if class_label == 1:  # 1 = spam, 0 = ham
-                for feature_index, feature in enumerate(feature_vec):
-                    # normalize by document word count
-                    normalized_weight = feature / total_feature_count
-                    self.feature_p_set[feature_index] += normalized_weight
-
-        # normalize by training set size
-        for feature_index in range(training_features):
-            self.feature_p_set[feature_index] /= training_samples
+            T = defaultdict(int)
+            for t in self.feature_ptrs:
+                T[t] += sum(x[t] for x in class_samples)
+            for t in self.feature_ptrs:
+                numer = T[t] + 1
+                denom = sum(T[t] + 1 for t in self.feature_ptrs)
+                self.condprob[t][c] = numer / denom
 
     def predict(self, test_x):
-        # test input present
-        assert len(test_x) > 0
         # test input feature size if the same as the trained model
-        assert len(test_x[0]) == len(self.feature_p_set)
+        assert len(test_x[0]) == len(self.condprob)
 
         # return a prediction for each feature set in the test input
         predictions = list()
 
-        for feature_vec in test_x:
-            # Which is higher: P(y = spam | x_1 = #, x_2 = #, ...) or P(y = ham | x_1 = #, x_2 = #, ...)
-            class_probability = 1
-            # use the input dataset to compute likelihood of each class
-            for feature_index, feature in enumerate(feature_vec):
-                # fetch parameter probability from model
-                feature_p = self.feature_p_set[feature_index]
-                feature_p_not = 1 - self.feature_p_set[feature_index]
-                # compute cumulative probability over next feature parameter
-                class_probability *= feature_p if feature > 0 else feature_p_not
+        for x in test_x:
+            score = dict()
+            for c in self.classes:
+                score[c] = log(self.prior[c])
+                for t in self.feature_ptrs:
+                    # only account for the feature if it exists in the document
+                    for _ in range(x[t]):
+                        score[c] += log(self.condprob[t][c])
 
-            # break the probability at 0.5, because there are only 2 classes
-            predictions.append(1 if class_probability >= 0.5 else 0)
+            # add highest class to prediction
+            class_prediction, _ = max(
+                score.items(),
+                key=lambda score: score[1],
+            )
+
+            predictions.append(class_prediction)
 
         return predictions
 
@@ -65,10 +64,20 @@ class NaiveBayesClassifier(Predictor):
 class LogisticRegressionClassifier(Predictor):
 
     def __init__(self, train_x, train_y):
+
+        # repeat until convergence
+        for _ in range(100):
+            pass
+
         pass
 
     def predict(self, test_x):
         # test input present
         assert len(test_x) > 0
 
+        # w0+n∑i=1wixi>0
+
         return (0 for _ in test_x)
+
+    def sigmoid(self, x):
+        return 1 / (1 + exp(x))
