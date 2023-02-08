@@ -118,6 +118,7 @@ class LogisticRegressionClassifier(Predictor):
         # train input present
         assert len(train_x) > 0
 
+        # TODO - learn this somehow using a 70/30 train/validation split
         mcap_factor = 0.05
         learning_rate = 0.001
 
@@ -132,19 +133,27 @@ class LogisticRegressionClassifier(Predictor):
         # repeat until convergence
         for t, _ in enumerate(self.weights):
             # MCAP update iterations
-            # TODO
+            # TODO - error in cases where t = 0?
             for _ in range(1):
-                if t > 1:
-                    # error in cases where t = 0?
+                if t >= 1:  # is this right?
                     update_term = sum(
-                        train_x[k][t - 1] *
-                        (train_y[k] - self.sigmoid(self.weights[0] + sum(
-                            weight * feature for feature, weight in zip(
-                                train_x[k], self.weights[1:]))))
-                        for k in range(len(train_x)))
+                        self.conditional_prob(train_x, train_y, k, t - 1)
+                        for k, _ in enumerate(train_x))
+
                     mcap_term = mcap_factor * self.weights[t]
+
                     self.weights[t] += learning_rate * (update_term -
                                                         mcap_term)
+
+    def conditional_prob(self, X, Y, k, t):
+        features = X[k]
+        bias, *feature_weights = self.weights
+
+        weighted_features = bias + sum(
+            weight * feature
+            for feature, weight in zip(features, feature_weights))
+
+        return X[k][t] * (Y[k] - self.sigmoid(weighted_features))
 
     def predict(self, test_x):
         # test input present
@@ -155,12 +164,12 @@ class LogisticRegressionClassifier(Predictor):
         bias, *feature_weights = self.weights
 
         for features in test_x:
-            weighted_features = sum(
+            weighted_features = bias + sum(
                 weight * feature
                 for feature, weight in zip(features, feature_weights))
 
             # returns a binary class prediction
-            class_prediciton = ceil(bias + weighted_features)
+            class_prediciton = ceil(weighted_features)
             predictions.append(class_prediciton)
 
         return predictions
