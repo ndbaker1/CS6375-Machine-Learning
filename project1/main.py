@@ -40,7 +40,8 @@ def parse_dataset_records(dataset_dir):
 
 
 def test_accuracy(predictor, test_input, test_expected):
-    # Use Classifier to predict the results
+    ''' Use Classifier `.predict` and compute accuracy with the labelled dataset '''
+
     predictions = predictor.predict(test_input)
     correct_predictions = filter(
         lambda v: v[0] == v[1],
@@ -89,11 +90,20 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
         count_vectorizer.transform(test_x).toarray(),
     )
 
-    # Naive Bayes
+    # Naive Bayes Multinomial
     for (train_set, test_set) in [data_models["BagOfWords"]]:
-        print("Naive Bayes <BagOfWords> Accuracy: {}".format(
+        print("Multinomial Naive Bayes <BagOfWords> Accuracy: {}".format(
             test_accuracy(
-                algorithms.NaiveBayesClassifier(train_set, train_y),
+                algorithms.MultinomialNBClassifier(train_set, train_y),
+                test_set,
+                test_y,
+            )))
+
+    # Naive Bayes Discrete
+    for (train_set, test_set) in [data_models["Bernoulli"]]:
+        print("Discrete Naive Bayes <Bernoulli> Accuracy: {}".format(
+            test_accuracy(
+                algorithms.DiscreteNBClassifier(train_set, train_y),
                 test_set,
                 test_y,
             )))
