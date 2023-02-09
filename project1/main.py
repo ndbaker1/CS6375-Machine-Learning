@@ -58,33 +58,44 @@ def test_accuracy(predictor, test_input, test_expected):
         precision +
         recall) == 0 else 2 * (precision * recall) / (precision + recall)
 
-    print("Accuracy: {}, Precision: {}, Recall: {}, F1: {}".format(
-        accuracy,
-        precision,
-        recall,
-        f1_score,
-    ))
+    return {
+        "accuracy": accuracy,
+        "precision": precision,
+        "recall": recall,
+        "f1_score": f1_score,
+    }
 
 
 def classifier_runner(classifier_name, classifier_constructor, data_models):
+    print(classifier_name)
     for model, (train_set, test_set) in data_models.items():
-        print("{} <{}>".format(classifier_name, model))
-        test_accuracy(
+        print("*", model)
+
+        test_metrics = test_accuracy(
             classifier_constructor(train_set, train_y),
             test_set,
             test_y,
         )
 
+        for metric, score in test_metrics.items():
+            print("    {:16}{}".format(metric + ":", score))
 
-def top_k_vectorizer(vectorizer, train_data, k=100):
-    train_vectorized = vectorizer.fit_transform(train_data)
-    words_sorted = sorted(((word, train_vectorized.sum(axis=0)[0, idx])
-                           for word, idx in vectorizer.vocabulary_.items()),
-                          key=lambda x: x[1],
-                          reverse=True)
 
-    top_k = (word for word, _ in words_sorted[:k])
-    vectorizer.fit(top_k)
+def top_k_vectorizer(vectorizer, train_data, k=None):
+    if k is not None:
+        train_vectorized = vectorizer.fit_transform(train_data)
+        words_sorted = sorted(
+            ((word, train_vectorized.sum(axis=0)[0, idx])
+             for word, idx in vectorizer.vocabulary_.items()),
+            key=lambda x: x[1],
+            reverse=True,
+        )
+
+        top_k = (word for word, _ in words_sorted[:k])
+        vectorizer.fit(top_k)
+    else:
+        vectorizer.fit(train_data)
+
     return vectorizer
 
 
@@ -96,7 +107,7 @@ dataset_parent = "./datasets" if len(argv) <= 1 else argv[1]
 # Gather statistics for each dataset based on the classification Algorithm
 for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
 
-    print("\nDataset: <{}>".format(dataset_dir))
+    print("\n—————— <{}> ——————".format(dataset_dir))
 
     # get train/test sets from dataset files
     (train_x, train_y), (test_x, test_y) = parse_dataset_records(dataset_dir)
@@ -116,7 +127,6 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     binary_vectorizer = top_k_vectorizer(
         CountVectorizer(stop_words="english", binary=True),
         train_data=train_x,
-        k=200,
     )
 
     data_models["Bernoulli"] = (
@@ -127,7 +137,6 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     bow_vectorizer = top_k_vectorizer(
         CountVectorizer(stop_words="english"),
         train_data=train_x,
-        k=200,
     )
 
     data_models["BagOfWords"] = (
@@ -152,7 +161,7 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     # MCAP Logistic Regression
     classifier_runner(
         "MCAP Logistic Regression",
-        algorithms.LogisticRegressionClassifier,
+        lambda x, y: algorithms.LogisticRegressionClassifier(x, y),
         data_models,
     )
 

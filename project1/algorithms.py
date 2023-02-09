@@ -1,5 +1,5 @@
 import random
-from math import log, exp, ceil
+from math import log, exp
 from abc import ABC, abstractmethod
 from collections import defaultdict
 
@@ -114,13 +114,12 @@ class DiscreteNBClassifier(Predictor):
 
 class LogisticRegressionClassifier(Predictor):
 
-    def __init__(self, train_x, train_y):
+    def __init__(self, train_x, train_y, iterations=5, learning_rate=0.08):
         # train input present
         assert len(train_x) > 0
 
         # TODO - learn this somehow using a 70/30 train/validation split
-        mcap_factor = 0.005
-        learning_rate = 0.01
+        mcap_factor = 0.01
 
         self.feature_ptrs = range(len(train_x[0]))
 
@@ -130,30 +129,33 @@ class LogisticRegressionClassifier(Predictor):
         for _ in self.feature_ptrs:
             self.weights.append(random_weight())
 
-        # repeat until convergence
-        for t, _ in enumerate(self.weights):
-            # MCAP update iterations
-            # TODO - error in cases where t = 0?
-            for _ in range(1):
-                if t >= 1:  # is this right?
-                    update_term = sum(
-                        self.conditional_prob(train_x, train_y, k, t - 1)
-                        for k, _ in enumerate(train_x))
-
+        # MCAP update iterations
+        for _ in range(iterations):
+            # compute gradients for all features to use within the
+            # weight loop for gradient ascent
+            gradients = [
+                self.feature_gradient(features, label)
+                for features, label in zip(train_x, train_y)
+            ]
+            for t, _ in enumerate(self.weights):
+                if t >= 1:  # ignore bias
+                    # sum gradients along a feature axis
+                    update_term = sum(grad[t - 1] for grad in gradients)
+                    # use MCAP lambda
                     mcap_term = mcap_factor * self.weights[t]
 
                     self.weights[t] += learning_rate * (update_term -
                                                         mcap_term)
 
-    def conditional_prob(self, X, Y, k, t):
-        features = X[k]
+    def feature_gradient(self, X, Y):
         bias, *feature_weights = self.weights
 
         weighted_features = bias + sum(
-            weight * feature
-            for feature, weight in zip(features, feature_weights))
+            weight * feature for feature, weight in zip(X, feature_weights))
 
-        return X[k][t] * (Y[k] - self.sigmoid(weighted_features))
+        error = Y - self.sigmoid(weighted_features)
+
+        return [feature * error for feature in X]
 
     def predict(self, test_x):
         # test input present
@@ -169,7 +171,7 @@ class LogisticRegressionClassifier(Predictor):
                 for feature, weight in zip(features, feature_weights))
 
             # returns a binary class prediction
-            class_prediciton = ceil(weighted_features)
+            class_prediciton = 1 if weighted_features > 0 else 0
             predictions.append(class_prediciton)
 
         return predictions
