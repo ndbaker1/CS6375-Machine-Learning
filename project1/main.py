@@ -2,6 +2,7 @@ import os
 import algorithms
 
 from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -167,7 +168,12 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
 
     # SGDClassifier
     classifier_runner(
-        "SGD Classifier",
-        SGDClassifier().fit,
+        "SGD Classifier + GridSearchCV",
+        GridSearchCV(
+            SGDClassifier(),
+            {
+                "alpha": [0.001, 0.01, 0.1, 1, 10]
+            },
+        ).fit,
         data_models,
     )
