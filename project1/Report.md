@@ -149,6 +149,18 @@ author: "Nicholas Baker - ndb180002"
 	* f1_score:       0.9774436090225566
 
 \newpage
+# Hyper-parameter Tuning
+
+## LR Penalty (Lambda)
+
+To find the best `lambda` for the LR algorithm I ran tests with different values on a logarithmic scale from `0.0001` to `0.1`.
+After training an LR model with each of these parameters using a 70/30 split of the training set,
+I would compare their accuracy with the validation portion and take the parameter from the highest scoring model.
+
+## SGDClassifier
+
+The SGDClassifier takes an `alpha` parameter which I tuned using the `GridSearchCV` and passing a logarithmic search space from `0.001` to `10`.
+
 # Questions
 
 1. Which data representation and algorithm combination yields the best performance (measured in terms of the accuracy, precision, recall and F1 score) and why?
