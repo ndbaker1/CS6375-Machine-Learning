@@ -6,6 +6,11 @@ from collections import defaultdict
 from sklearn.model_selection import train_test_split
 
 
+def dict_max(dictionary):
+    '''Returns the key of the maximum value item in the dictionary'''
+    return max(dictionary, key=lambda x: dictionary[x])
+
+
 class Predictor(ABC):
 
     @abstractmethod
@@ -53,10 +58,7 @@ class MultinomialNBClassifier(Predictor):
                     score[c] += features[t] * log(self.condprob[t][c])
 
             # add highest class to prediction
-            class_prediction, _ = max(
-                score.items(),
-                key=lambda score: score[1],
-            )
+            class_prediction = dict_max(score)
 
             predictions.append(class_prediction)
 
@@ -103,10 +105,7 @@ class DiscreteNBClassifier(Predictor):
                         score[c] += log(1 - self.condprob[t][c])
 
             # add highest class to prediction
-            class_prediction, _ = max(
-                score.items(),
-                key=lambda score: score[1],
-            )
+            class_prediction = dict_max(score)
 
             predictions.append(class_prediction)
 
@@ -152,10 +151,7 @@ class LogisticRegressionClassifier(Predictor):
 
             print(performance_params)
             # extract the best performing
-            penalty_factor, _ = max(
-                performance_params.items(),
-                key=lambda score: score[1],
-            )
+            penalty_factor = dict_max(performance_params)
 
             print("learned", penalty_factor, "as penalty factor.")
 
