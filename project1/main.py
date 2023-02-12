@@ -69,9 +69,9 @@ def test_accuracy(predictor, test_input, test_expected):
 
 
 def classifier_runner(classifier_name, classifier_constructor, data_models):
-    print(classifier_name)
+    print("\n###", classifier_name)
     for model, (train_set, test_set) in data_models.items():
-        print("*", model)
+        print("\n*", model)
 
         test_metrics = test_accuracy(
             classifier_constructor(train_set, train_y),
@@ -80,7 +80,7 @@ def classifier_runner(classifier_name, classifier_constructor, data_models):
         )
 
         for metric, score in test_metrics.items():
-            print("    {:16}{}".format(metric + ":", score))
+            print("    * {:16}{}".format(metric + ":", score))
 
 
 def top_k_vectorizer(vectorizer, train_data, k=None):
@@ -109,7 +109,7 @@ dataset_parent = "./datasets" if len(argv) <= 1 else argv[1]
 # Gather statistics for each dataset based on the classification Algorithm
 for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
 
-    print("\n—————— <{}> ——————".format(dataset_dir))
+    print("\n##", dataset_dir)
 
     # get train/test sets from dataset files
     (train_x, train_y), (test_x, test_y) = parse_dataset_records(dataset_dir)
@@ -125,11 +125,12 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     #
     # In the case of Bernoulli, the CountVectorizer must be set to 'binary',
     # which will output 1 if a feature is present, regardless of frequency.
+    word_sanitizer = lambda x: re.sub(r'\d+', '', x)
 
     binary_vectorizer = top_k_vectorizer(
         CountVectorizer(
             stop_words="english",
-            preprocessor=lambda x: re.sub(r'\d+', '', x),
+            preprocessor=word_sanitizer,
             binary=True,
         ),
         train_data=train_x,
@@ -143,7 +144,7 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     bow_vectorizer = top_k_vectorizer(
         CountVectorizer(
             stop_words="english",
-            preprocessor=lambda x: re.sub(r'\d+', '', x),
+            preprocessor=word_sanitizer,
         ),
         train_data=train_x,
     )

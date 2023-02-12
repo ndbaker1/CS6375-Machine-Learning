@@ -19,6 +19,7 @@ class Predictor(ABC):
 
 
 class MultinomialNBClassifier(Predictor):
+    '''Implementation based on https://nlp.stanford.edu/IR-book/pdf/13bayes.pdf'''
 
     def __init__(self, train_x, train_y):
         # train input present
@@ -66,6 +67,7 @@ class MultinomialNBClassifier(Predictor):
 
 
 class DiscreteNBClassifier(Predictor):
+    '''Implementation based on https://nlp.stanford.edu/IR-book/pdf/13bayes.pdf'''
 
     def __init__(self, train_x, train_y):
         # train input present

@@ -1,4 +1,6 @@
 *env
 datasets
 
+*.pdf
+
 __pycache__
