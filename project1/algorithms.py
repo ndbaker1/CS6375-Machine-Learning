@@ -3,6 +3,8 @@ from math import log, exp
 from abc import ABC, abstractmethod
 from collections import defaultdict
 
+from sklearn.model_selection import train_test_split
+
 
 class Predictor(ABC):
 
@@ -48,8 +50,7 @@ class MultinomialNBClassifier(Predictor):
                 score[c] = log(self.prior[c])
                 for t in self.feature_ptrs:
                     # only account for the feature if it exists in the document
-                    for _ in range(features[t]):
-                        score[c] += log(self.condprob[t][c])
+                    score[c] += features[t] * log(self.condprob[t][c])
 
             # add highest class to prediction
             class_prediction, _ = max(
@@ -114,12 +115,49 @@ class DiscreteNBClassifier(Predictor):
 
 class LogisticRegressionClassifier(Predictor):
 
-    def __init__(self, train_x, train_y, iterations=5, learning_rate=0.08):
+    def __init__(
+        self,
+        train_x,
+        train_y,
+        iterations=20,
+        learning_rate=0.1,
+        penalty_factor=None,
+    ):
         # train input present
         assert len(train_x) > 0
 
-        # TODO - learn this somehow using a 70/30 train/validation split
-        mcap_factor = 0.01
+        if penalty_factor is None:
+            # learn λ using a (70/30):(train/validation) split
+            performance_params = dict()
+            # compute accuracy to the validation set for a set of test parameters
+            for λ in (0.0001, 0.001, 0.01, 0.1):
+                (t_x, v_x, t_y, v_y) = train_test_split(
+                    train_x,
+                    train_y,
+                    train_size=0.3,
+                )
+
+                validation_predictions = LogisticRegressionClassifier(
+                    t_x,
+                    t_y,
+                    iterations,
+                    learning_rate,
+                    penalty_factor=λ,
+                ).predict(v_x)
+
+                correct_predictions = sum(
+                    1 for y, Y in zip(validation_predictions, v_y) if y == Y)
+
+                performance_params[λ] = correct_predictions / len(v_y)
+
+            print(performance_params)
+            # extract the best performing
+            penalty_factor, _ = max(
+                performance_params.items(),
+                key=lambda score: score[1],
+            )
+
+            print("learned", penalty_factor, "as penalty factor.")
 
         self.feature_ptrs = range(len(train_x[0]))
 
@@ -131,31 +169,34 @@ class LogisticRegressionClassifier(Predictor):
 
         # MCAP update iterations
         for _ in range(iterations):
-            # compute gradients for all features to use within the
-            # weight loop for gradient ascent
-            gradients = [
-                self.feature_gradient(features, label)
+            # errors for each point in the dataset
+            errors = [
+                self.weighted_cond_error(features, label)
                 for features, label in zip(train_x, train_y)
             ]
-            for t, _ in enumerate(self.weights):
-                if t >= 1:  # ignore bias
-                    # sum gradients along a feature axis
-                    update_term = sum(grad[t - 1] for grad in gradients)
-                    # use MCAP lambda
-                    mcap_term = mcap_factor * self.weights[t]
 
-                    self.weights[t] += learning_rate * (update_term -
-                                                        mcap_term)
+            for i, weight in enumerate(self.weights):
+                # compute gradient by multiplying errors by the current feature
+                if i == 0:
+                    gradient = sum(errors)
+                else:
+                    gradient = sum(features[i - 1] * error
+                                   for features, error in zip(train_x, errors))
 
-    def feature_gradient(self, X, Y):
+                # use MCAP lambda to get complexity penalty
+                penalty = penalty_factor * weight
+
+                self.weights[i] += learning_rate * (gradient - penalty)
+
+    def weighted_cond_error(self, x, y):
         bias, *feature_weights = self.weights
 
         weighted_features = bias + sum(
-            weight * feature for feature, weight in zip(X, feature_weights))
+            weight * feature for feature, weight in zip(x, feature_weights))
 
-        error = Y - self.sigmoid(weighted_features)
+        error = y - self.sigmoid(weighted_features)
 
-        return [feature * error for feature in X]
+        return error
 
     def predict(self, test_x):
         # test input present

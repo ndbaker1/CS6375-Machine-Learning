@@ -1,4 +1,5 @@
 import os
+import re
 import algorithms
 
 from sklearn.linear_model import SGDClassifier
@@ -126,7 +127,11 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     # which will output 1 if a feature is present, regardless of frequency.
 
     binary_vectorizer = top_k_vectorizer(
-        CountVectorizer(stop_words="english", binary=True),
+        CountVectorizer(
+            stop_words="english",
+            preprocessor=lambda x: re.sub(r'\d+', '', x),
+            binary=True,
+        ),
         train_data=train_x,
     )
 
@@ -136,7 +141,10 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
     )
 
     bow_vectorizer = top_k_vectorizer(
-        CountVectorizer(stop_words="english"),
+        CountVectorizer(
+            stop_words="english",
+            preprocessor=lambda x: re.sub(r'\d+', '', x),
+        ),
         train_data=train_x,
     )
 
