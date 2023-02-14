@@ -181,7 +181,8 @@ for dataset_dir in (d.path for d in os.scandir(dataset_parent) if d.is_dir()):
         GridSearchCV(
             SGDClassifier(),
             {
-                "alpha": [0.001, 0.01, 0.1, 1, 10]
+                "alpha": [0.0001, 0.001, 0.01, 0.1, 1, 10],
+                "penalty": ['l2', 'l1', 'elasticnet', None],
             },
         ).fit,
         data_models,
