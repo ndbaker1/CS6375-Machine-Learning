@@ -2,5 +2,6 @@
 datasets
 
 *.pdf
+*.zip
 
 __pycache__

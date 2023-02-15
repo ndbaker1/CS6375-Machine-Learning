@@ -161,19 +161,28 @@ I would compare their accuracy with the validation portion and take the paramete
 ## SGDClassifier
 
 The SGDClassifier takes an `alpha` parameter which I tuned using the `GridSearchCV` and passing a logarithmic search space from `0.001` to `10`.
+Additionally, we could modify the penalty function to be `l2`, `l1`, `elasticnet`, or simply avoid any penalty at all.
 
 # Questions
 
 1. Which data representation and algorithm combination yields the best performance (measured in terms of the accuracy, precision, recall and F1 score) and why?
 
-	...
+	Multinomial Naive Bayes with Bag of Words performs the best, which makes sense because it is more informed than
+	Discrete Naive Bayes and has more context sensitivity. LR and SGDClassifier are able to also learn the parameters
+	quite well, but they need large data sizes in order to have a better dataset curve to fit.
+
+	For the most if not all measurements, Multinomial Naive Bayes provides higher or equal value compareds to 
+	other algorithms. It does not perform perfectly (such as as recall of 1.0), but it has the most consistenly
+	high score among the enron4 dataset, which is the largest given for spam/ham.
 
 2. Does Multinomial Naive Bayes perform better (again performance is measured in terms
 of the accuracy, precision, recall and F1 score) than LR and SGDClassifier on the Bag
 of Words representation? Explain your yes/no answer.
 
-	No, In most cases Multinomial Naive Bayes performs as well or only slightly worse than LR and SGDClassifier.
-	It appears more likely to overfit to the training data, but results with the NB algorithm are very reliable. 
+	Yes, In most cases Multinomial Naive Bayes performs as well or slightly better than LR and SGDClassifier.
+	LR and SGDClassifier will perform better with larger datasets, but can potentially overfit in smaller datasets 
+	of which I believe our spam/ham dataset belongs. Multinomial Naive Bayes is able to make stable predictions even
+	from a small size as long as the sample is uniform and well represents the prior biases.
 
 3. Does Discrete Naive Bayes perform better (again performance is measured in terms of
 the accuracy, precision, recall and F1 score) than LR and SGDClassifier on the Bernoulli
@@ -181,13 +190,13 @@ representation? Explain your yes/no answer.
 
 	No, the Discrete Naive Bayes performs worse than LR and SGDClassifier in almost every case.
 	The Discrete Naive Bayes model is insensitive to words appearing more than once,
-	which appears to be an important task when discovering characteristics of spam vs real emails.
+	which is an important part of the features between spam and real emails.
 
 4. Does your LR implementation outperform the SGDClassifier (again performance is measured in terms of the accuracy, precision, recall and F1 score) or is the difference in
 performance minor? Explain your yes/no answer.
 
 	No, my LR implementation was either the same or slightly worse (could have taken more training iterations) than the SGDClassifier.
-	Since the SGDClassifier is built upon Stochastic Gradient Descent while our LR implementation uses
-	a Batch Gradient Descent Approach (as discussed in the corresponding lecture), their outcomes were very similar.
+	Since the SGDClassifier is built upon Stochastic Gradient Ascent while our LR implementation uses
+	a Batch Gradient Ascent Approach (as discussed in the corresponding lecture), their outcomes were very similar.
 	Interestingly both had higher accuracy on average for the Bernoulli than the Bag of Words model. 
 
