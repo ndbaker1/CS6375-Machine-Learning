@@ -47,10 +47,15 @@ class CollaborativeFiltering:
             c1_entry, c2_entry = (movie_id, c1), (movie_id, c2)
             return c1_entry in self.vote_database and c2_entry in self.vote_database
 
-        c1_distances, c2_distances = zip(*[(
+        distances = [(
             self.vote_database[(movie_id, c1)] - self.vote_means[c1],
             self.vote_database[(movie_id, c2)] - self.vote_means[c2],
-        ) for movie_id in self.movie_ids if both_voted(movie_id)])
+        ) for movie_id in self.movie_ids if both_voted(movie_id)]
+
+        if len(distances) == 0:
+            return 0
+
+        c1_distances, c2_distances = zip(*distances)
 
         numer = sum(
             c1_distance * c2_distance
