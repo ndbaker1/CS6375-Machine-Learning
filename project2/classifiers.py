@@ -1,12 +1,3 @@
-from sklearn.datasets import fetch_openml
-# Load data from https://www.openml.org/d/554
-X, y = fetch_openml('mnist_784', version=1, return_X_y=True)
-X = X / 255.0
-# rescale the data, use the traditional train/test split
-# (60K: Train) and (10K: Test)
-X_train, X_test = X[:60000], X[60000:]
-y_train, y_test = y[:60000], y[60000:]
-
 # • Use the SVM classifier in scikit learn and try different kernels and values of penalty parameter. Important: Depending on your computer hardware, you may have to carefully select
 # the parameters (see the documentation on scikit learn for details) in order to speed up the
 # computation. Report the error rate for at least 10 parameter settings that you tried. Make
@@ -29,4 +20,77 @@ y_train, y_test = y[:60000], y[60000:]
 # just one parameter 10 times; we want to see diversity.
 
 if __name__ == "__main__":
-    pass
+
+    print('fetching dataset...')
+
+    from sklearn.datasets import fetch_openml
+    # Load data from https://www.openml.org/d/554
+    X, y = fetch_openml('mnist_784',
+                        version=1,
+                        return_X_y=True,
+                        as_frame=False)
+    X = X / 255.0
+    y = [int(y) for y in y]
+    # rescale the data, use the traditional train/test split
+    # (60K: Train) and (10K: Test)
+    X_train, X_test = X[:60000], X[60000:]
+    y_train, y_test = y[:60000], y[60000:]
+    print(X[:5])
+    print(y[:5])
+
+    print('finished loading dataset.')
+
+    from sklearn.svm import SVC
+    from sklearn.neural_network import MLPClassifier
+    from sklearn.neighbors import KNeighborsClassifier
+
+    from sklearn.metrics import mean_absolute_error
+
+    for kernel in ['linear', 'poly', 'rbf', 'sigmoid']:
+        for C in [1.0, 0.1]:
+
+            print(f'running SVM classifier with [kernel={kernel}, C={C}]...')
+
+            classifier = SVC(
+                kernel=kernel,
+                C=C,
+            ).fit(X_train, y_train)
+
+            print(
+                f'error: {mean_absolute_error(y_test, classifier.predict(X_test))}'
+            )
+
+    for activation in ['identity', 'logistic', 'tanh', 'relu']:
+        for solver in ['lbfgs', 'sgd', 'adam']:
+            for learning_rate in ['constant', 'invscaling', 'adaptive']:
+
+                print(
+                    f'running MLP classifier with [activation={activation}, solver={solver}, learning_rate={learning_rate}]...'
+                )
+
+                classifier = MLPClassifier(
+                    activation=activation,
+                    solver=solver,
+                    learning_rate=learning_rate,
+                ).fit(X_train, y_train)
+
+                print(
+                    f'error: {mean_absolute_error(y_test, classifier.predict(X_test))}'
+                )
+
+    for weights in ['uniform', 'distance']:
+        for algorithm in ['auto', 'ball_tree', 'kd_tree', 'brute']:
+            for n_neighbors in [2, 5, 10, 50]:
+
+                print(
+                    f'running KNN classifier with [weights={weights}, algorithm={algorithm}, n_neighbors={n_neighbors}]...'
+                )
+
+                classifier = KNeighborsClassifier(
+                    weights=weights,
+                    algorithm=algorithm,
+                    n_neighbors=n_neighbors,
+                ).fit(X_train, y_train)
+                print(
+                    f'error: {mean_absolute_error(y_test, classifier.predict(X_test))}'
+                )
