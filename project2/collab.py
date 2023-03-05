@@ -2,6 +2,9 @@
 
 import math
 from collections import defaultdict
+import pandas as pd
+from scipy import sparse
+from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 
@@ -25,17 +28,43 @@ class CollaborativeFiltering:
             for k, v in customer_votes.items()
         }
 
+        # array of vectors for each customer representing their movie voting
+        indices = ["movie_id", "customer_id"]
+
+        self.customer_df = pd.DataFrame(
+            train_x,
+            columns=indices,
+        ).groupby(indices).size().unstack(fill_value=0)
+
+        self.customer_matrix = sparse.csr_matrix(
+            self.customer_df.transpose().values)
+
+        print(self.customer_matrix)
+
+        self.database_knn_model = NearestNeighbors(metric="cosine",
+                                                   algorithm="brute")
+        self.database_knn_model.fit(self.customer_matrix)
+
     def predict(self, test_x, k=1) -> list:
 
         predictions = list()
 
         for movie_id, customer_id in test_x:
+            neighbor_indices = self.database_knn_model.kneighbors(
+                self.customer_matrix[self.customer_df.columns.get_loc(
+                    customer_id)],
+                return_distance=False,
+            )[0]
+
+            neighbors = [self.customer_df.columns[i] for i in neighbor_indices]
+
+            print(neighbors)
+
             prediction = self.vote_means[customer_id] + k * sum(
-                self.correlation(customer_id, stored_customer_id) *
-                (self.vote_database[(movie_id, stored_customer_id)] -
-                 self.vote_means[stored_customer_id])
-                for stored_customer_id in self.vote_means.keys() if
-                (movie_id, stored_customer_id) in self.vote_database)
+                self.correlation(customer_id, neighbor) * (self.vote_database[
+                    (movie_id, neighbor)] - self.vote_means[neighbor])
+                for neighbor in neighbors if
+                (movie_id, neighbor) in self.vote_database)
 
             predictions.append(prediction)
 
@@ -94,10 +123,6 @@ if __name__ == "__main__":
             test_y.append(float(rating))
 
     collaborative_filter = CollaborativeFiltering(train_x, train_y)
-
-    # testing
-    test_x = test_x[:]
-    test_y = test_y[:]
 
     # compute and print evaluation metrics
     predictions = collaborative_filter.predict(test_x)

@@ -6,7 +6,7 @@ ndb180002
 ## Dependencies
 
 ```sh
-pip install scikit-learn numpy
+pip install scikit-learn numpy scipy pandas
 ```
 
 ## Run
