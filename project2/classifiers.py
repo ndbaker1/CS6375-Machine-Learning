@@ -35,8 +35,6 @@ if __name__ == "__main__":
     # (60K: Train) and (10K: Test)
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
-    print(X[:5])
-    print(y[:5])
 
     print('finished loading dataset.')
 
@@ -47,7 +45,7 @@ if __name__ == "__main__":
     from sklearn.metrics import mean_absolute_error
 
     for kernel in ['linear', 'poly', 'rbf', 'sigmoid']:
-        for C in [1.0, 0.1]:
+        for C in [1.0, 0.1, 0.01]:
 
             print(f'running SVM classifier with [kernel={kernel}, C={C}]...')
 
@@ -63,34 +61,41 @@ if __name__ == "__main__":
     for activation in ['identity', 'logistic', 'tanh', 'relu']:
         for solver in ['lbfgs', 'sgd', 'adam']:
             for learning_rate in ['constant', 'invscaling', 'adaptive']:
+                for alpha in [0.00001, 0.0001, 0.001, 0.01]:
+                    for early_stopping in [False, True]:
 
-                print(
-                    f'running MLP classifier with [activation={activation}, solver={solver}, learning_rate={learning_rate}]...'
-                )
+                        print(
+                            f'running MLP classifier with [activation={activation}, solver={solver}, learning_rate={learning_rate}, alpha={alpha}, early_stopping={early_stopping}]...'
+                        )
 
-                classifier = MLPClassifier(
-                    activation=activation,
-                    solver=solver,
-                    learning_rate=learning_rate,
-                ).fit(X_train, y_train)
+                        classifier = MLPClassifier(
+                            activation=activation,
+                            solver=solver,
+                            learning_rate=learning_rate,
+                            alpha=alpha,
+                            early_stopping=early_stopping,
+                        ).fit(X_train, y_train)
 
-                print(
-                    f'error: {mean_absolute_error(y_test, classifier.predict(X_test))}'
-                )
+                        print(
+                            f'error: {mean_absolute_error(y_test, classifier.predict(X_test))}'
+                        )
 
     for weights in ['uniform', 'distance']:
         for algorithm in ['auto', 'ball_tree', 'kd_tree', 'brute']:
             for n_neighbors in [2, 5, 10, 50]:
+                for p in [1, 1.5, 2]:
 
-                print(
-                    f'running KNN classifier with [weights={weights}, algorithm={algorithm}, n_neighbors={n_neighbors}]...'
-                )
+                    print(
+                        f'running KNN classifier with [weights={weights}, algorithm={algorithm}, n_neighbors={n_neighbors}, p={p}]...'
+                    )
 
-                classifier = KNeighborsClassifier(
-                    weights=weights,
-                    algorithm=algorithm,
-                    n_neighbors=n_neighbors,
-                ).fit(X_train, y_train)
-                print(
-                    f'error: {mean_absolute_error(y_test, classifier.predict(X_test))}'
-                )
+                    classifier = KNeighborsClassifier(
+                        weights=weights,
+                        algorithm=algorithm,
+                        n_neighbors=n_neighbors,
+                        p=p,
+                        n_jobs=-1,
+                    ).fit(X_train, y_train)
+                    print(
+                        f'error: {mean_absolute_error(y_test, classifier.predict(X_test))}'
+                    )
