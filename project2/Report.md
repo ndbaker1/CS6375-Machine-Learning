@@ -1,3 +1,8 @@
+# Collaborative Filtering
+mean absolute error: 0.7618265408304616
+root mean squared error: 0.9660156340232393
+
+# Classifier Parameters
 running SVM classifier with [kernel=linear, C=1.0]...
 error: 0.2153
 running SVM classifier with [kernel=linear, C=0.1]...
