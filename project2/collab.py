@@ -28,7 +28,6 @@ class CollaborativeFiltering:
             for k, v in customer_votes.items()
         }
 
-        # array of vectors for each customer representing their movie voting
         indices = ["movie_id", "customer_id"]
 
         self.customer_df = pd.DataFrame(
@@ -36,29 +35,28 @@ class CollaborativeFiltering:
             columns=indices,
         ).groupby(indices).size().unstack(fill_value=0)
 
+        # array of vectors for each customer representing their movie voting
+        # needs to be transposed because customer_id is how we want to index the data in the sparse matrix
         self.customer_matrix = sparse.csr_matrix(
             self.customer_df.transpose().values)
 
-        print(self.customer_matrix)
-
-        self.database_knn_model = NearestNeighbors(metric="cosine",
-                                                   algorithm="brute")
-        self.database_knn_model.fit(self.customer_matrix)
+        # train kNN model
+        self.database_knn = NearestNeighbors(metric="cosine",
+                                             algorithm="brute")
+        self.database_knn.fit(self.customer_matrix)
 
     def predict(self, test_x, k=1) -> list:
 
         predictions = list()
 
         for movie_id, customer_id in test_x:
-            neighbor_indices = self.database_knn_model.kneighbors(
-                self.customer_matrix[self.customer_df.columns.get_loc(
-                    customer_id)],
+            customer_index = self.customer_df.columns.get_loc(customer_id)
+            neighbor_sets = self.database_knn.kneighbors(
+                self.customer_matrix[customer_index],
                 return_distance=False,
-            )[0]
+            )
 
-            neighbors = [self.customer_df.columns[i] for i in neighbor_indices]
-
-            print(neighbors)
+            neighbors = [self.customer_df.columns[i] for i in neighbor_sets[0]]
 
             prediction = self.vote_means[customer_id] + k * sum(
                 self.correlation(customer_id, neighbor) * (self.vote_database[
@@ -122,9 +120,11 @@ if __name__ == "__main__":
             test_x.append((movie_id, customer_id))
             test_y.append(float(rating))
 
+    print("training...")
     collaborative_filter = CollaborativeFiltering(train_x, train_y)
 
     # compute and print evaluation metrics
+    print("testing...")
     predictions = collaborative_filter.predict(test_x)
 
     mean_abs_error, root_mean_sqr_error = (
