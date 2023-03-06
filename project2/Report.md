@@ -227,12 +227,17 @@ very tight and quite possibly overfitted to the training set.
 | activation=logistic, solver=adam, learning_rate=constant, alpha=0.001 | 0.0713 |
 | activation=logistic, solver=adam, learning_rate=invscaling, alpha=0.01 | 0.0713 |
 
-<!-- .. adjust for 2 -->
-The best performing MLP Classifier in this testing set was `adam` solver which extends
-classical stochastic gradint descent. the activation function was logistic or sigmoid,
-and the learning rate was chosen as constant, which starts with a fairly low initial learning
-rate and maintains that value throughout the training. Finally, the alpha term was on the lower range of the scale, which meant there was less
-need for strong L2 regularization with this data.
+There were two intances of MLP Classifiers reaching the minimal mean absolute error over
+the test set, and those models only differed between their `learning_rate` strategy and `alpha` parameter.
+
+the discrepancy between the two models gives me an intuitition that a constant (seemingly low)
+learning rate does not need a high `alpha`, which act as the L2 regularization term. Conversely,
+the same score was achieved when `alpha` was slightly higher, but `learning_rate` was set to `invscaling` 
+which gradually decreases the learning rate. This may be because large jumps along the gradient curve
+require more regularization in order for performance to be stable.
+
+Both models utilized the `adam` solver which extends classical stochastic gradint descent,
+and favored the logiststic (or sigmoid) activation function. 
 
 
 ## KNN Classifier
@@ -242,4 +247,11 @@ need for strong L2 regularization with this data.
 | weights=distance, algorithm=ball_tree, n_neighbors=2, p=2 | 0.115 |
 | weights=distance, algorithm=brute, n_neighbors=2, p=2 | 0.115 |
 
-The best performing KNN Classifier in this testing set was ...
+Two instances of kNN Classifiers reached the minimal mean absolute error over the 
+test set, any the only different in `algorithm`, which determines how neighbors on 
+compute over the training set.
+
+It is interesting that euclidean distance (`p=2`) and `2` neighbors performed most optimally
+in both cases, possibly meaning there are small neighborhoods of similar users. 
+
+
