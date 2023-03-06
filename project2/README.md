@@ -14,5 +14,8 @@ pip install scikit-learn numpy scipy pandas
 ```sh
 # collaborative filtering
 python collab.py
+
+# scikit-learn classifiers
+python classifiers.py
 ```
 

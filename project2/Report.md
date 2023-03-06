@@ -1,157 +1,245 @@
-# Collaborative Filtering
-mean absolute error: 0.7618265408304616
-root mean squared error: 0.9660156340232393
+---
+title: "Machine Learning Project 2 Report"
+author: "Nicholas Baker - ndb180002"
+geometry: margin=1in
+---
 
-# Classifier Parameters
-running SVM classifier with [kernel=linear, C=1.0]...
-error: 0.2153
-running SVM classifier with [kernel=linear, C=0.1]...
-error: 0.1916
-running SVM classifier with [kernel=poly, C=1.0]...
-error: 0.0917
-running SVM classifier with [kernel=poly, C=0.1]...
-error: 0.1695
-running SVM classifier with [kernel=rbf, C=1.0]...
-error: 0.0822
-running SVM classifier with [kernel=rbf, C=0.1]...
-error: 0.1535
-running SVM classifier with [kernel=sigmoid, C=1.0]...
-error: 0.8063
-running SVM classifier with [kernel=sigmoid, C=0.1]...
-error: 0.5732
-running MLP classifier with [activation=identity, solver=lbfgs, learning_rate=constant]...
-error: 0.2688
-running MLP classifier with [activation=identity, solver=lbfgs, learning_rate=invscaling]...
-error: 0.2693
-running MLP classifier with [activation=identity, solver=lbfgs, learning_rate=adaptive]...
-error: 0.2689
-running MLP classifier with [activation=identity, solver=sgd, learning_rate=constant]...
-error: 0.2772
-running MLP classifier with [activation=identity, solver=sgd, learning_rate=invscaling]...
-error: 0.5901
-running MLP classifier with [activation=identity, solver=sgd, learning_rate=adaptive]...
-error: 0.2741
-running MLP classifier with [activation=identity, solver=adam, learning_rate=constant]...
-error: 0.2646
-running MLP classifier with [activation=identity, solver=adam, learning_rate=invscaling]...
-error: 0.2729
-running MLP classifier with [activation=identity, solver=adam, learning_rate=adaptive]...
-error: 0.2722
-running MLP classifier with [activation=logistic, solver=lbfgs, learning_rate=constant]...
-error: 0.1044
-running MLP classifier with [activation=logistic, solver=lbfgs, learning_rate=invscaling]...
-error: 0.1004
-running MLP classifier with [activation=logistic, solver=lbfgs, learning_rate=adaptive]...
-error: 0.1052
-running MLP classifier with [activation=logistic, solver=sgd, learning_rate=constant]...
-error: 0.2419
-running MLP classifier with [activation=logistic, solver=sgd, learning_rate=invscaling]...
-error: 1.5083
-running MLP classifier with [activation=logistic, solver=sgd, learning_rate=adaptive]...
-error: 0.2439
-running MLP classifier with [activation=logistic, solver=adam, learning_rate=constant]...
-error: 0.0932
-running MLP classifier with [activation=logistic, solver=adam, learning_rate=invscaling]...
-error: 0.0794
-running MLP classifier with [activation=logistic, solver=adam, learning_rate=adaptive]...
-error: 0.0813
-running MLP classifier with [activation=tanh, solver=lbfgs, learning_rate=constant]...
-error: 0.1136
-running MLP classifier with [activation=tanh, solver=lbfgs, learning_rate=invscaling]...
-error: 0.1069
-running MLP classifier with [activation=tanh, solver=lbfgs, learning_rate=adaptive]...
-error: 0.094
-running MLP classifier with [activation=tanh, solver=sgd, learning_rate=constant]...
-error: 0.1253
-running MLP classifier with [activation=tanh, solver=sgd, learning_rate=invscaling]...
-error: 0.5796
-running MLP classifier with [activation=tanh, solver=sgd, learning_rate=adaptive]...
-error: 0.1315
-running MLP classifier with [activation=tanh, solver=adam, learning_rate=constant]...
-error: 0.0805
-running MLP classifier with [activation=tanh, solver=adam, learning_rate=invscaling]...
-error: 0.081
-running MLP classifier with [activation=tanh, solver=adam, learning_rate=adaptive]...
-error: 0.0815
-running MLP classifier with [activation=relu, solver=lbfgs, learning_rate=constant]...
-error: 0.0872
-running MLP classifier with [activation=relu, solver=lbfgs, learning_rate=invscaling]...
-error: 0.097
-running MLP classifier with [activation=relu, solver=lbfgs, learning_rate=adaptive]...
-error: 0.083
-running MLP classifier with [activation=relu, solver=sgd, learning_rate=constant]...
-error: 0.1064
-running MLP classifier with [activation=relu, solver=sgd, learning_rate=invscaling]...
-error: 0.6187
-running MLP classifier with [activation=relu, solver=sgd, learning_rate=adaptive]...
-error: 0.1096
-running MLP classifier with [activation=relu, solver=adam, learning_rate=constant]...
-error: 0.0798
-running MLP classifier with [activation=relu, solver=adam, learning_rate=invscaling]...
-error: 0.0781
-running MLP classifier with [activation=relu, solver=adam, learning_rate=adaptive]...
-error: 0.0774
-running KNN classifier with [weights=uniform, algorithm=auto, n_neighbors=2]...
-error: 0.1457
-running KNN classifier with [weights=uniform, algorithm=auto, n_neighbors=5]...
-error: 0.124
-running KNN classifier with [weights=uniform, algorithm=auto, n_neighbors=10]...
-error: 0.1325
-running KNN classifier with [weights=uniform, algorithm=auto, n_neighbors=50]...
-error: 0.1782
-running KNN classifier with [weights=uniform, algorithm=ball_tree, n_neighbors=2]...
-error: 0.1457
-running KNN classifier with [weights=uniform, algorithm=ball_tree, n_neighbors=5]...
-error: 0.124
-running KNN classifier with [weights=uniform, algorithm=ball_tree, n_neighbors=10]...
-error: 0.1325
-running KNN classifier with [weights=uniform, algorithm=ball_tree, n_neighbors=50]...
-error: 0.1782
-running KNN classifier with [weights=uniform, algorithm=kd_tree, n_neighbors=2]...
-error: 0.1457
-running KNN classifier with [weights=uniform, algorithm=kd_tree, n_neighbors=5]...
-error: 0.124
-running KNN classifier with [weights=uniform, algorithm=kd_tree, n_neighbors=10]...
-error: 0.1325
-running KNN classifier with [weights=uniform, algorithm=kd_tree, n_neighbors=50]...
-error: 0.1782
-running KNN classifier with [weights=uniform, algorithm=brute, n_neighbors=2]...
-error: 0.1457
-running KNN classifier with [weights=uniform, algorithm=brute, n_neighbors=5]...
-error: 0.124
-running KNN classifier with [weights=uniform, algorithm=brute, n_neighbors=10]...
-error: 0.1325
-running KNN classifier with [weights=uniform, algorithm=brute, n_neighbors=50]...
-error: 0.1782
-running KNN classifier with [weights=distance, algorithm=auto, n_neighbors=2]...
-error: 0.115
-running KNN classifier with [weights=distance, algorithm=auto, n_neighbors=5]...
-error: 0.1207
-running KNN classifier with [weights=distance, algorithm=auto, n_neighbors=10]...
-error: 0.1256
-running KNN classifier with [weights=distance, algorithm=auto, n_neighbors=50]...
-error: 0.1735
-running KNN classifier with [weights=distance, algorithm=ball_tree, n_neighbors=2]...
-error: 0.115
-running KNN classifier with [weights=distance, algorithm=ball_tree, n_neighbors=5]...
-error: 0.1207
-running KNN classifier with [weights=distance, algorithm=ball_tree, n_neighbors=10]...
-error: 0.1256
-running KNN classifier with [weights=distance, algorithm=ball_tree, n_neighbors=50]...
-error: 0.1735
-running KNN classifier with [weights=distance, algorithm=kd_tree, n_neighbors=2]...
-error: 0.115
-running KNN classifier with [weights=distance, algorithm=kd_tree, n_neighbors=5]...
-error: 0.1207
-running KNN classifier with [weights=distance, algorithm=kd_tree, n_neighbors=10]...
-error: 0.1256
-running KNN classifier with [weights=distance, algorithm=kd_tree, n_neighbors=50]...
-error: 0.1735
-running KNN classifier with [weights=distance, algorithm=brute, n_neighbors=2]...
-error: 0.115
-running KNN classifier with [weights=distance, algorithm=brute, n_neighbors=5]...
-error: 0.1207
-running KNN classifier with [weights=distance, algorithm=brute, n_neighbors=10]...
-error: 0.1256
-running KNN classifier with [weights=distance, algorithm=brute, n_neighbors=50]...
-error: 0.1735
+# Collaborative Filtering
+
+This collaborative filtering implementation improves runtime by only computing
+correlation scores between the `5` nearest neighbors based on `cosine distance`
+between binary vectors in a sparse `mxn` matrix between `MovieID` and `CustomerID`.
+
+We do this by training a `NearestNeighbor` model on the dataset; ignoring the 
+assigned `rating` of each interaction.
+
+| MAE | RMSE |
+|---|---|
+| 0.7618265408304616 | 0.9660156340232393 |
+
+# scikit-learn Classifiers
+
+## SVM Classifier
+
+| Parameters | MAE |
+|---|---|
+| kernel=linear, C=1.0 | 0.2153 |
+| kernel=linear, C=0.1 | 0.1916 |
+| kernel=linear, C=0.01 | 0.2068 |
+| kernel=poly, C=1.0 | 0.0917 |
+| kernel=poly, C=0.1 | 0.1695 |
+| kernel=poly, C=0.01 | 0.3974 |
+| kernel=rbf, C=1.0 | 0.0822 |
+| kernel=rbf, C=0.1 | 0.1535 |
+| kernel=rbf, C=0.01 | 0.2831 |
+| kernel=sigmoid, C=1.0 | 0.8063 |
+| kernel=sigmoid, C=0.1 | 0.5732 |
+| kernel=sigmoid, C=0.01 | 0.4413 |
+
+## MLP Classifier
+
+| Parameters | MAE |
+|---|---|
+| activation=identity, solver=lbfgs, learning_rate=constant, alpha=0.0001 | 0.2712 |
+| activation=identity, solver=lbfgs, learning_rate=constant, alpha=0.001 | 0.2711 |
+| activation=identity, solver=lbfgs, learning_rate=constant, alpha=0.01 | 0.2694 |
+| activation=identity, solver=lbfgs, learning_rate=invscaling, alpha=0.0001 | 0.2682 |
+| activation=identity, solver=lbfgs, learning_rate=invscaling, alpha=0.001 | 0.2708 |
+| activation=identity, solver=lbfgs, learning_rate=invscaling, alpha=0.01 | 0.267 |
+| activation=identity, solver=lbfgs, learning_rate=adaptive, alpha=0.0001 | 0.2699 |
+| activation=identity, solver=lbfgs, learning_rate=adaptive, alpha=0.001 | 0.2665 |
+| activation=identity, solver=lbfgs, learning_rate=adaptive, alpha=0.01 | 0.2714 |
+| activation=identity, solver=sgd, learning_rate=constant, alpha=0.0001 | 0.2756 |
+| activation=identity, solver=sgd, learning_rate=constant, alpha=0.001 | 0.2744 |
+| activation=identity, solver=sgd, learning_rate=constant, alpha=0.01 | 0.2722 |
+| activation=identity, solver=sgd, learning_rate=invscaling, alpha=0.0001 | 0.5686 |
+| activation=identity, solver=sgd, learning_rate=invscaling, alpha=0.001 | 0.5612 |
+| activation=identity, solver=sgd, learning_rate=invscaling, alpha=0.01 | 0.5538 |
+| activation=identity, solver=sgd, learning_rate=adaptive, alpha=0.0001 | 0.2763 |
+| activation=identity, solver=sgd, learning_rate=adaptive, alpha=0.001 | 0.272 |
+| activation=identity, solver=sgd, learning_rate=adaptive, alpha=0.01 | 0.276 |
+| activation=identity, solver=adam, learning_rate=constant, alpha=0.0001 | 0.2682 |
+| activation=identity, solver=adam, learning_rate=constant, alpha=0.001 | 0.2637 |
+| activation=identity, solver=adam, learning_rate=constant, alpha=0.01 | 0.2672 |
+| activation=identity, solver=adam, learning_rate=invscaling, alpha=0.0001 | 0.2701 |
+| activation=identity, solver=adam, learning_rate=invscaling, alpha=0.001 | 0.2788 |
+| activation=identity, solver=adam, learning_rate=invscaling, alpha=0.01 | 0.2715 |
+| activation=identity, solver=adam, learning_rate=adaptive, alpha=0.0001 | 0.2794 |
+| activation=identity, solver=adam, learning_rate=adaptive, alpha=0.001 | 0.2711 |
+| activation=identity, solver=adam, learning_rate=adaptive, alpha=0.01 | 0.2873 |
+| activation=logistic, solver=lbfgs, learning_rate=constant, alpha=0.0001 | 0.1 |
+| activation=logistic, solver=lbfgs, learning_rate=constant, alpha=0.001 | 0.1011 |
+| activation=logistic, solver=lbfgs, learning_rate=constant, alpha=0.01 | 0.0972 |
+| activation=logistic, solver=lbfgs, learning_rate=invscaling, alpha=0.0001 | 0.096 |
+| activation=logistic, solver=lbfgs, learning_rate=invscaling, alpha=0.001 | 0.1062 |
+| activation=logistic, solver=lbfgs, learning_rate=invscaling, alpha=0.01 | 0.1004 |
+| activation=logistic, solver=lbfgs, learning_rate=adaptive, alpha=0.0001 | 0.1015 |
+| activation=logistic, solver=lbfgs, learning_rate=adaptive, alpha=0.001 | 0.1153 |
+| activation=logistic, solver=lbfgs, learning_rate=adaptive, alpha=0.01 | 0.1076 |
+| activation=logistic, solver=sgd, learning_rate=constant, alpha=0.0001 | 0.2429 |
+| activation=logistic, solver=sgd, learning_rate=constant, alpha=0.001 | 0.2424 |
+| activation=logistic, solver=sgd, learning_rate=constant, alpha=0.01 | 0.2448 |
+| activation=logistic, solver=sgd, learning_rate=invscaling, alpha=0.0001 | 1.7575 |
+| activation=logistic, solver=sgd, learning_rate=invscaling, alpha=0.001 | 1.6581 |
+| activation=logistic, solver=sgd, learning_rate=invscaling, alpha=0.01 | 1.7623 |
+| activation=logistic, solver=sgd, learning_rate=adaptive, alpha=0.0001 | 0.2399 |
+| activation=logistic, solver=sgd, learning_rate=adaptive, alpha=0.001 | 0.241 |
+| activation=logistic, solver=sgd, learning_rate=adaptive, alpha=0.01 | 0.2433 |
+| activation=logistic, solver=adam, learning_rate=constant, alpha=0.0001 | 0.0821 |
+| activation=logistic, solver=adam, learning_rate=constant, alpha=0.001 | 0.0713 |
+| activation=logistic, solver=adam, learning_rate=constant, alpha=0.01 | 0.0737 |
+| activation=logistic, solver=adam, learning_rate=invscaling, alpha=0.0001 | 0.0797 |
+| activation=logistic, solver=adam, learning_rate=invscaling, alpha=0.001 | 0.0792 |
+| activation=logistic, solver=adam, learning_rate=invscaling, alpha=0.01 | 0.0713 |
+| activation=logistic, solver=adam, learning_rate=adaptive, alpha=0.0001 | 0.0872 |
+| activation=logistic, solver=adam, learning_rate=adaptive, alpha=0.001 | 0.079 |
+| activation=logistic, solver=adam, learning_rate=adaptive, alpha=0.01 | 0.0766 |
+| activation=tanh, solver=lbfgs, learning_rate=constant, alpha=0.0001 | 0.1033 |
+| activation=tanh, solver=lbfgs, learning_rate=constant, alpha=0.001 | 0.1027 |
+| activation=tanh, solver=lbfgs, learning_rate=constant, alpha=0.01 | 0.0983 |
+| activation=tanh, solver=lbfgs, learning_rate=invscaling, alpha=0.0001 | 0.0973 |
+| activation=tanh, solver=lbfgs, learning_rate=invscaling, alpha=0.001 | 0.1025 |
+| activation=tanh, solver=lbfgs, learning_rate=invscaling, alpha=0.01 | 0.1027 |
+| activation=tanh, solver=lbfgs, learning_rate=adaptive, alpha=0.0001 | 0.1064 |
+| activation=tanh, solver=lbfgs, learning_rate=adaptive, alpha=0.001 | 0.1023 |
+| activation=tanh, solver=lbfgs, learning_rate=adaptive, alpha=0.01 | 0.1041 |
+| activation=tanh, solver=sgd, learning_rate=constant, alpha=0.0001 | 0.1235 |
+| activation=tanh, solver=sgd, learning_rate=constant, alpha=0.001 | 0.1281 |
+| activation=tanh, solver=sgd, learning_rate=constant, alpha=0.01 | 0.133 |
+| activation=tanh, solver=sgd, learning_rate=invscaling, alpha=0.0001 | 0.5837 |
+| activation=tanh, solver=sgd, learning_rate=invscaling, alpha=0.001 | 0.5927 |
+| activation=tanh, solver=sgd, learning_rate=invscaling, alpha=0.01 | 0.6417 |
+| activation=tanh, solver=sgd, learning_rate=adaptive, alpha=0.0001 | 0.1297 |
+| activation=tanh, solver=sgd, learning_rate=adaptive, alpha=0.001 | 0.1304 |
+| activation=tanh, solver=sgd, learning_rate=adaptive, alpha=0.01 | 0.1246 |
+| activation=tanh, solver=adam, learning_rate=constant, alpha=0.0001 | 0.0914 |
+| activation=tanh, solver=adam, learning_rate=constant, alpha=0.001 | 0.0878 |
+| activation=tanh, solver=adam, learning_rate=constant, alpha=0.01 | 0.0867 |
+| activation=tanh, solver=adam, learning_rate=invscaling, alpha=0.0001 | 0.0866 |
+| activation=tanh, solver=adam, learning_rate=invscaling, alpha=0.001 | 0.0885 |
+| activation=tanh, solver=adam, learning_rate=invscaling, alpha=0.01 | 0.0854 |
+| activation=tanh, solver=adam, learning_rate=adaptive, alpha=0.0001 | 0.0855 |
+| activation=tanh, solver=adam, learning_rate=adaptive, alpha=0.001 | 0.0824 |
+| activation=tanh, solver=adam, learning_rate=adaptive, alpha=0.01 | 0.0809 |
+| activation=relu, solver=lbfgs, learning_rate=constant, alpha=0.0001 | 0.0907 |
+| activation=relu, solver=lbfgs, learning_rate=constant, alpha=0.001 | 0.0942 |
+| activation=relu, solver=lbfgs, learning_rate=constant, alpha=0.01 | 0.0851 |
+| activation=relu, solver=lbfgs, learning_rate=invscaling, alpha=0.0001 | 0.0898 |
+| activation=relu, solver=lbfgs, learning_rate=invscaling, alpha=0.001 | 0.0873 |
+| activation=relu, solver=lbfgs, learning_rate=invscaling, alpha=0.01 | 0.0925 |
+| activation=relu, solver=lbfgs, learning_rate=adaptive, alpha=0.0001 | 0.0877 |
+| activation=relu, solver=lbfgs, learning_rate=adaptive, alpha=0.001 | 0.0879 |
+| activation=relu, solver=lbfgs, learning_rate=adaptive, alpha=0.01 | 0.0921 |
+| activation=relu, solver=sgd, learning_rate=constant, alpha=0.0001 | 0.1119 |
+| activation=relu, solver=sgd, learning_rate=constant, alpha=0.001 | 0.1117 |
+| activation=relu, solver=sgd, learning_rate=constant, alpha=0.01 | 0.1126 |
+| activation=relu, solver=sgd, learning_rate=invscaling, alpha=0.0001 | 0.6479 |
+| activation=relu, solver=sgd, learning_rate=invscaling, alpha=0.001 | 0.6473 |
+| activation=relu, solver=sgd, learning_rate=invscaling, alpha=0.01 | 0.6874 |
+| activation=relu, solver=sgd, learning_rate=adaptive, alpha=0.0001 | 0.1196 |
+| activation=relu, solver=sgd, learning_rate=adaptive, alpha=0.001 | 0.1113 |
+| activation=relu, solver=sgd, learning_rate=adaptive, alpha=0.01 | 0.1148 |
+| activation=relu, solver=adam, learning_rate=constant, alpha=0.0001 | 0.0792 |
+| activation=relu, solver=adam, learning_rate=constant, alpha=0.001 | 0.0795 |
+| activation=relu, solver=adam, learning_rate=constant, alpha=0.01 | 0.0732 |
+| activation=relu, solver=adam, learning_rate=invscaling, alpha=0.0001 | 0.0802 |
+| activation=relu, solver=adam, learning_rate=invscaling, alpha=0.001 | 0.0765 |
+| activation=relu, solver=adam, learning_rate=invscaling, alpha=0.01 | 0.0728 |
+| activation=relu, solver=adam, learning_rate=adaptive, alpha=0.0001 | 0.0786 |
+| activation=relu, solver=adam, learning_rate=adaptive, alpha=0.001 | 0.0813 |
+| activation=relu, solver=adam, learning_rate=adaptive, alpha=0.01 | 0.0757 |
+
+## kNN Classifier
+
+| Parameters | MAE |
+|---|---|
+| weights=uniform, algorithm=ball_tree, n_neighbors=2, p=1 | 0.1771 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=2, p=1.5 | 0.156 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=2, p=2 | 0.1457 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=5, p=1 | 0.1502 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=5, p=1.5 | 0.1343 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=5, p=2 | 0.124 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=10, p=1 | 0.1611 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=10, p=1.5 | 0.1453 |
+| weights=uniform, algorithm=ball_tree, n_neighbors=10, p=2 | 0.1325 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=2, p=1 | 0.1771 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=2, p=1.5 | 0.156 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=2, p=2 | 0.1457 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=5, p=1 | 0.1502 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=5, p=1.5 | 0.1343 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=5, p=2 | 0.124 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=10, p=1 | 0.1611 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=10, p=1.5 | 0.1453 |
+| weights=uniform, algorithm=kd_tree, n_neighbors=10, p=2 | 0.1325 |
+| weights=uniform, algorithm=brute, n_neighbors=2, p=1 | 0.1771 |
+| weights=uniform, algorithm=brute, n_neighbors=2, p=1.5 | 0.156 |
+| weights=uniform, algorithm=brute, n_neighbors=2, p=2 | 0.1457 |
+| weights=uniform, algorithm=brute, n_neighbors=5, p=1 | 0.1502 |
+| weights=uniform, algorithm=brute, n_neighbors=5, p=1.5 | 0.1343 |
+| weights=uniform, algorithm=brute, n_neighbors=5, p=2 | 0.124 |
+| weights=uniform, algorithm=brute, n_neighbors=10, p=1 | 0.1611 |
+| weights=uniform, algorithm=brute, n_neighbors=10, p=1.5 | 0.1453 |
+| weights=uniform, algorithm=brute, n_neighbors=10, p=2 | 0.1325 |
+| weights=distance, algorithm=ball_tree, n_neighbors=2, p=1 | 0.1379 |
+| weights=distance, algorithm=ball_tree, n_neighbors=2, p=1.5 | 0.1275 |
+| weights=distance, algorithm=ball_tree, n_neighbors=2, p=2 | 0.115 |
+| weights=distance, algorithm=ball_tree, n_neighbors=5, p=1 | 0.1437 |
+| weights=distance, algorithm=ball_tree, n_neighbors=5, p=1.5 | 0.1293 |
+| weights=distance, algorithm=ball_tree, n_neighbors=5, p=2 | 0.1207 |
+| weights=distance, algorithm=ball_tree, n_neighbors=10, p=1 | 0.1503 |
+| weights=distance, algorithm=ball_tree, n_neighbors=10, p=1.5 | 0.1396 |
+| weights=distance, algorithm=ball_tree, n_neighbors=10, p=2 | 0.1256 |
+| weights=distance, algorithm=kd_tree, n_neighbors=2, p=1 | 0.1379 |
+| weights=distance, algorithm=kd_tree, n_neighbors=2, p=1.5 | 0.1275 |
+| weights=distance, algorithm=kd_tree, n_neighbors=2, p=2 | 0.115 |
+| weights=distance, algorithm=kd_tree, n_neighbors=5, p=1 | 0.1437 |
+| weights=distance, algorithm=kd_tree, n_neighbors=5, p=1.5 | 0.1293 |
+| weights=distance, algorithm=kd_tree, n_neighbors=5, p=2 | 0.1207 |
+| weights=distance, algorithm=kd_tree, n_neighbors=10, p=1 | 0.1503 |
+| weights=distance, algorithm=kd_tree, n_neighbors=10, p=1.5 | 0.1396 |
+| weights=distance, algorithm=kd_tree, n_neighbors=10, p=2 | 0.1256 |
+| weights=distance, algorithm=brute, n_neighbors=2, p=1 | 0.1379 |
+| weights=distance, algorithm=brute, n_neighbors=2, p=1.5 | 0.1275 |
+| weights=distance, algorithm=brute, n_neighbors=2, p=2 | 0.115 |
+| weights=distance, algorithm=brute, n_neighbors=5, p=1 | 0.1437 |
+| weights=distance, algorithm=brute, n_neighbors=5, p=1.5 | 0.1293 |
+| weights=distance, algorithm=brute, n_neighbors=5, p=2 | 0.1207 |
+| weights=distance, algorithm=brute, n_neighbors=10, p=1 | 0.1503 |
+| weights=distance, algorithm=brute, n_neighbors=10, p=1.5 | 0.1396 |
+| weights=distance, algorithm=brute, n_neighbors=10, p=2 | 0.1256 |
+
+# Minimum Errors
+
+## SVM Classifier
+
+| Parameters | MAE |
+|---|---|
+| kernel=rbf, C=1.0 | 0.0822 |
+
+The best performing SVM Classifier in this testing set used the `radial basis function`
+kernel in combination with a high penalty term, causing the margin for this SVM to be 
+very tight and quite possibly overfitted to the training set.
+
+## MLP Classifier
+
+| Parameters | MAE |
+|---|---|
+| activation=logistic, solver=adam, learning_rate=constant, alpha=0.001 | 0.0713 |
+| activation=logistic, solver=adam, learning_rate=invscaling, alpha=0.01 | 0.0713 |
+
+<!-- .. adjust for 2 -->
+The best performing MLP Classifier in this testing set was `adam` solver which extends
+classical stochastic gradint descent. the activation function was logistic or sigmoid,
+and the learning rate was chosen as constant, which starts with a fairly low initial learning
+rate and maintains that value throughout the training. Finally, the alpha term was on the lower range of the scale, which meant there was less
+need for strong L2 regularization with this data.
+
+
+## KNN Classifier
+
+| Parameters | MAE |
+|---|---|
+| weights=distance, algorithm=ball_tree, n_neighbors=2, p=2 | 0.115 |
+| weights=distance, algorithm=brute, n_neighbors=2, p=2 | 0.115 |
+
+The best performing KNN Classifier in this testing set was ...
