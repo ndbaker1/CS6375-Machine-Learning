@@ -17,7 +17,7 @@ assigned `rating` of each interaction.
 |---|---|
 | 0.7618265408304616 | 0.9660156340232393 |
 
-# scikit-learn Classifiers
+# scikit-learn Classifier Results
 
 ## SVM Classifier
 
@@ -208,7 +208,7 @@ assigned `rating` of each interaction.
 | weights=distance, algorithm=brute, n_neighbors=10, p=1.5 | 0.1396 |
 | weights=distance, algorithm=brute, n_neighbors=10, p=2 | 0.1256 |
 
-# Minimum Errors
+# scikit-learn Optimal Classifier parameters
 
 ## SVM Classifier
 
