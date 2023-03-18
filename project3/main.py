@@ -67,7 +67,7 @@ if __name__ == "__main__":
     search_model = GridSearchCV(
         BaggingClassifier(),
         {
-            "n_estimators": [5, 10, 50],
+            "n_estimators": [5, 10, 20],
             "max_samples": [10, 0.5, 1.0],
             "max_features": [10, 0.5, 1.0],
         },
@@ -99,11 +99,11 @@ if __name__ == "__main__":
     search_model = GridSearchCV(
         RandomForestClassifier(),
         {
-            "n_estimators": [5, 10, 50],
+            "n_estimators": [5, 10, 20],
             "criterion": ["gini", "entropy", "log_loss"],
             "max_depth": [5, 20, None],
             "max_features": ["sqrt", "log2", None],
-            "min_samples_split": [2, 0.05, 0.2, 0.5],
+            "min_samples_split": [2, 0.1, 0.5],
         },
     )
 
@@ -133,11 +133,11 @@ if __name__ == "__main__":
     search_model = GridSearchCV(
         GradientBoostingClassifier(),
         {
-            "n_estimators": [5, 10, 50],
+            "n_estimators": [5, 10, 20],
             "loss": ['log_loss', 'exponential'],
             "criterion": ['friedman_mse', 'squared_error'],
             "max_features": [1.0, 'sqrt', 'log2'],
-            "learning_rate": [0.05, 0.2, 0.5, 2],
+            "learning_rate": [0.1, 0.5, 2],
             "subsample": [0.05, 0.2, 1.0],
         },
     )
