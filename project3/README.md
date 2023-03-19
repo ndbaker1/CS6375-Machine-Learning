@@ -12,6 +12,9 @@ pip install scikit-learn numpy
 ## Run
 
 ```sh
-python main.py
+# run classifiers using the provided dataset
+python classifiers.py
+# run part (6), using the mnist dataset
+python mnist.py
 ```
 

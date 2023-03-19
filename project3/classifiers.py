@@ -13,15 +13,15 @@ if __name__ == "__main__":
 
     for dataset_path in os.listdir(DATA_DIR):
         group, name = dataset_path.split('_', maxsplit=1)
-        X_valid, Y_valid = [], []
+        X_valid, y_valid = [], []
 
         with open(DATA_DIR + "/" + dataset_path) as dataset_file:
             for data in dataset_file.read().splitlines():
                 *features, classification = list(map(int, data.split(',')))
                 X_valid.append(features)
-                Y_valid.append(classification)
+                y_valid.append(classification)
 
-        datasets[name][group] = (X_valid, Y_valid)
+        datasets[name][group] = (X_valid, y_valid)
 
     # 1. (15 points) Use the sklearn.tree.DecisionTreeClassifier on the 15 datasets.
     # Use the validation set to tune the parameters (see the documentation for parameters; e.g., criterion, splitter, max depth, etc.).
@@ -41,21 +41,21 @@ if __name__ == "__main__":
     for dataset_key, dataset in datasets.items():
         print(f"DecisionTreeClassifier {dataset_key}")
 
-        X_valid, Y_valid = dataset["valid"]
-        X_train, Y_train = dataset["train"]
-        X_test, Y_test = dataset["test"]
+        X_valid, y_valid = dataset["valid"]
+        X_train, y_train = dataset["train"]
+        X_test, y_test = dataset["test"]
 
-        search_model.fit(X_valid, Y_valid)
+        search_model.fit(X_valid, y_valid)
 
         print(f"parameters: {search_model.best_params_}")
 
         model = DecisionTreeClassifier(**search_model.best_params_)
-        model.fit([*X_valid, *X_train], [*Y_valid, *Y_train])
+        model.fit([*X_valid, *X_train], [*y_valid, *y_train])
 
         predictions = model.predict(X_test)
 
-        accuracy = accuracy_score(Y_test, predictions)
-        f1 = f1_score(Y_test, predictions)
+        accuracy = accuracy_score(y_test, predictions)
+        f1 = f1_score(y_test, predictions)
 
         print(f"accuracy: {accuracy}, f1: {f1}")
 
@@ -76,21 +76,21 @@ if __name__ == "__main__":
     for dataset_key, dataset in datasets.items():
         print(f"BaggingClassifier {dataset_key}")
 
-        X_valid, Y_valid = dataset["valid"]
-        X_train, Y_train = dataset["train"]
-        X_test, Y_test = dataset["test"]
+        X_valid, y_valid = dataset["valid"]
+        X_train, y_train = dataset["train"]
+        X_test, y_test = dataset["test"]
 
-        search_model.fit(X_valid, Y_valid)
+        search_model.fit(X_valid, y_valid)
 
         print(f"parameters: {search_model.best_params_}")
 
         model = BaggingClassifier(**search_model.best_params_, )
-        model.fit([*X_valid, *X_train], [*Y_valid, *Y_train])
+        model.fit([*X_valid, *X_train], [*y_valid, *y_train])
 
         predictions = model.predict(X_test)
 
-        accuracy = accuracy_score(Y_test, predictions)
-        f1 = f1_score(Y_test, predictions)
+        accuracy = accuracy_score(y_test, predictions)
+        f1 = f1_score(y_test, predictions)
 
         print(f"accuracy: {accuracy}, f1: {f1}")
 
@@ -110,21 +110,21 @@ if __name__ == "__main__":
     for dataset_key, dataset in datasets.items():
         print(f"RandomForestClassifier {dataset_key}")
 
-        X_valid, Y_valid = dataset["valid"]
-        X_train, Y_train = dataset["train"]
-        X_test, Y_test = dataset["test"]
+        X_valid, y_valid = dataset["valid"]
+        X_train, y_train = dataset["train"]
+        X_test, y_test = dataset["test"]
 
-        search_model.fit(X_valid, Y_valid)
+        search_model.fit(X_valid, y_valid)
 
         print(f"parameters: {search_model.best_params_}")
 
         model = RandomForestClassifier(**search_model.best_params_)
-        model.fit([*X_valid, *X_train], [*Y_valid, *Y_train])
+        model.fit([*X_valid, *X_train], [*y_valid, *y_train])
 
         predictions = model.predict(X_test)
 
-        accuracy = accuracy_score(Y_test, predictions)
-        f1 = f1_score(Y_test, predictions)
+        accuracy = accuracy_score(y_test, predictions)
+        f1 = f1_score(y_test, predictions)
 
         print(f"accuracy: {accuracy}, f1: {f1}")
 
@@ -145,20 +145,20 @@ if __name__ == "__main__":
     for dataset_key, dataset in datasets.items():
         print(f"GradientBoostingClassifier {dataset_key}")
 
-        X_valid, Y_valid = dataset["valid"]
-        X_train, Y_train = dataset["train"]
-        X_test, Y_test = dataset["test"]
+        X_valid, y_valid = dataset["valid"]
+        X_train, y_train = dataset["train"]
+        X_test, y_test = dataset["test"]
 
-        search_model.fit(X_valid, Y_valid)
+        search_model.fit(X_valid, y_valid)
 
         print(f"parameters: {search_model.best_params_}")
 
         model = GradientBoostingClassifier(**search_model.best_params_)
-        model.fit([*X_valid, *X_train], [*Y_valid, *Y_train])
+        model.fit([*X_valid, *X_train], [*y_valid, *y_train])
 
         predictions = model.predict(X_test)
 
-        accuracy = accuracy_score(Y_test, predictions)
-        f1 = f1_score(Y_test, predictions)
+        accuracy = accuracy_score(y_test, predictions)
+        f1 = f1_score(y_test, predictions)
 
         print(f"accuracy: {accuracy}, f1: {f1}")
