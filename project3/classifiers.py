@@ -4,6 +4,8 @@ if __name__ == "__main__":
     from sklearn.model_selection import GridSearchCV
     from sklearn.metrics import accuracy_score, f1_score
 
+    from common import *
+
     from collections import defaultdict
     import os
 
@@ -30,24 +32,15 @@ if __name__ == "__main__":
     # For each dataset, also report the “best parameter settings found via tuning.”
     search_model = GridSearchCV(
         DecisionTreeClassifier(),
-        {
-            "criterion": ["gini", "entropy", "log_loss"],
-            "splitter": ["best", "random"],
-            "max_depth": [5, 20, None],
-            "max_features": ["sqrt", "log2", None],
-        },
+        DECISION_TREE_CLASSIFIER_PARAMS,
     )
 
     for dataset_key, dataset in datasets.items():
-        print(f"DecisionTreeClassifier {dataset_key}")
-
         X_valid, y_valid = dataset["valid"]
         X_train, y_train = dataset["train"]
         X_test, y_test = dataset["test"]
 
         search_model.fit(X_valid, y_valid)
-
-        print(f"parameters: {search_model.best_params_}")
 
         model = DecisionTreeClassifier(**search_model.best_params_)
         model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -57,7 +50,13 @@ if __name__ == "__main__":
         accuracy = accuracy_score(y_test, predictions)
         f1 = f1_score(y_test, predictions)
 
-        print(f"accuracy: {accuracy}, f1: {f1}")
+        print_table(
+            "DecisionTreeClassifier",
+            dataset_key,
+            search_model.best_params_,
+            accuracy,
+            f1,
+        )
 
     # 2. (15 points) Repeat the experiment described above using:
     # sklearn.ensemble.BaggingClassifier with “DecisionTreeClassifier” as the base estimator.
@@ -66,23 +65,16 @@ if __name__ == "__main__":
     # (b) Classification accuracy and F1 score.
     search_model = GridSearchCV(
         BaggingClassifier(),
-        {
-            "n_estimators": [5, 10, 20],
-            "max_samples": [10, 0.5, 1.0],
-            "max_features": [10, 0.5, 1.0],
-        },
+        BAGGING_CLASSIFIER_PARAMS,
     )
 
     for dataset_key, dataset in datasets.items():
-        print(f"BaggingClassifier {dataset_key}")
 
         X_valid, y_valid = dataset["valid"]
         X_train, y_train = dataset["train"]
         X_test, y_test = dataset["test"]
 
         search_model.fit(X_valid, y_valid)
-
-        print(f"parameters: {search_model.best_params_}")
 
         model = BaggingClassifier(**search_model.best_params_, )
         model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -92,31 +84,27 @@ if __name__ == "__main__":
         accuracy = accuracy_score(y_test, predictions)
         f1 = f1_score(y_test, predictions)
 
-        print(f"accuracy: {accuracy}, f1: {f1}")
+        print_table(
+            "BaggingClassifier",
+            dataset_key,
+            search_model.best_params_,
+            accuracy,
+            f1,
+        )
 
     # 3. (15 points) Repeat the experiment described above using:
     # sklearn.ensemble.RandomForestClassifier.
     search_model = GridSearchCV(
         RandomForestClassifier(),
-        {
-            "n_estimators": [5, 10, 20],
-            "criterion": ["gini", "entropy", "log_loss"],
-            "max_depth": [5, 20, None],
-            "max_features": ["sqrt", "log2", None],
-            "min_samples_split": [2, 0.1, 0.5],
-        },
+        RANDOM_FOREST_CLASSIFIER_PARAMS,
     )
 
     for dataset_key, dataset in datasets.items():
-        print(f"RandomForestClassifier {dataset_key}")
-
         X_valid, y_valid = dataset["valid"]
         X_train, y_train = dataset["train"]
         X_test, y_test = dataset["test"]
 
         search_model.fit(X_valid, y_valid)
-
-        print(f"parameters: {search_model.best_params_}")
 
         model = RandomForestClassifier(**search_model.best_params_)
         model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -126,32 +114,27 @@ if __name__ == "__main__":
         accuracy = accuracy_score(y_test, predictions)
         f1 = f1_score(y_test, predictions)
 
-        print(f"accuracy: {accuracy}, f1: {f1}")
+        print_table(
+            "RandomForestClassifier",
+            dataset_key,
+            search_model.best_params_,
+            accuracy,
+            f1,
+        )
 
     # 4. (15 points) Repeat the experiment described above using:
     # sklearn.ensemble.GradientBoostingClassifier.
     search_model = GridSearchCV(
         GradientBoostingClassifier(),
-        {
-            "n_estimators": [5, 10, 20],
-            "loss": ['log_loss', 'exponential'],
-            "criterion": ['friedman_mse', 'squared_error'],
-            "max_features": [1.0, 'sqrt', 'log2'],
-            "learning_rate": [0.1, 0.5, 2],
-            "subsample": [0.05, 0.2, 1.0],
-        },
+        GRADIENT_BOOSTING_CLASSIFIER_PARAMS,
     )
 
     for dataset_key, dataset in datasets.items():
-        print(f"GradientBoostingClassifier {dataset_key}")
-
         X_valid, y_valid = dataset["valid"]
         X_train, y_train = dataset["train"]
         X_test, y_test = dataset["test"]
 
         search_model.fit(X_valid, y_valid)
-
-        print(f"parameters: {search_model.best_params_}")
 
         model = GradientBoostingClassifier(**search_model.best_params_)
         model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -161,4 +144,10 @@ if __name__ == "__main__":
         accuracy = accuracy_score(y_test, predictions)
         f1 = f1_score(y_test, predictions)
 
-        print(f"accuracy: {accuracy}, f1: {f1}")
+        print_table(
+            "GradientBoostingClassifier",
+            dataset_key,
+            search_model.best_params_,
+            accuracy,
+            f1,
+        )

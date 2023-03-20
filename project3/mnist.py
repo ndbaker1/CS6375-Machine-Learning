@@ -2,7 +2,9 @@ if __name__ == "__main__":
     from sklearn.tree import DecisionTreeClassifier
     from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, GradientBoostingClassifier
     from sklearn.model_selection import GridSearchCV
-    from sklearn.metrics import accuracy_score, f1_score
+    from sklearn.metrics import accuracy_score
+
+    from common import *
 
     # 6. (15 points) Evaluate the four tree and ensemble classifiers you used above on
     # the MNIST dataset from Project 2 (do not compute F1 scores on MNIST, just classification accuracy).
@@ -19,19 +21,10 @@ if __name__ == "__main__":
 
     search_model = GridSearchCV(
         DecisionTreeClassifier(),
-        {
-            "criterion": ["gini", "entropy", "log_loss"],
-            "splitter": ["best", "random"],
-            "max_depth": [5, 20, None],
-            "max_features": ["sqrt", "log2", None],
-        },
+        DECISION_TREE_CLASSIFIER_PARAMS,
     )
 
-    print(f"DecisionTreeClassifier mnist")
-
     search_model.fit(X_valid, y_valid)
-
-    print(f"parameters: {search_model.best_params_}")
 
     model = DecisionTreeClassifier(**search_model.best_params_)
     model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -40,7 +33,12 @@ if __name__ == "__main__":
 
     accuracy = accuracy_score(y_test, predictions)
 
-    print(f"accuracy: {accuracy}")
+    print_table(
+        "DecisionTreeClassifier",
+        "mnist",
+        search_model.best_params_,
+        accuracy,
+    )
 
     # 2. (15 points) Repeat the experiment described above using:
     # sklearn.ensemble.BaggingClassifier with “DecisionTreeClassifier” as the base estimator.
@@ -49,18 +47,10 @@ if __name__ == "__main__":
     # (b) Classification accuracy and F1 score.
     search_model = GridSearchCV(
         BaggingClassifier(),
-        {
-            "n_estimators": [5, 10, 20],
-            "max_samples": [10, 0.5, 1.0],
-            "max_features": [10, 0.5, 1.0],
-        },
+        BAGGING_CLASSIFIER_PARAMS,
     )
 
-    print(f"BaggingClassifier mnist")
-
     search_model.fit(X_valid, y_valid)
-
-    print(f"parameters: {search_model.best_params_}")
 
     model = BaggingClassifier(**search_model.best_params_, )
     model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -69,26 +59,21 @@ if __name__ == "__main__":
 
     accuracy = accuracy_score(y_test, predictions)
 
-    print(f"accuracy: {accuracy}")
+    print_table(
+        "BaggingClassifier",
+        "mnist",
+        search_model.best_params_,
+        accuracy,
+    )
 
     # 3. (15 points) Repeat the experiment described above using:
     # sklearn.ensemble.RandomForestClassifier.
     search_model = GridSearchCV(
         RandomForestClassifier(),
-        {
-            "n_estimators": [5, 10, 20],
-            "criterion": ["gini", "entropy", "log_loss"],
-            "max_depth": [5, 20, None],
-            "max_features": ["sqrt", "log2", None],
-            "min_samples_split": [2, 0.1, 0.5],
-        },
+        RANDOM_FOREST_CLASSIFIER_PARAMS,
     )
 
-    print(f"RandomForestClassifier mnist")
-
     search_model.fit(X_valid, y_valid)
-
-    print(f"parameters: {search_model.best_params_}")
 
     model = RandomForestClassifier(**search_model.best_params_)
     model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -97,27 +82,21 @@ if __name__ == "__main__":
 
     accuracy = accuracy_score(y_test, predictions)
 
-    print(f"accuracy: {accuracy}")
+    print_table(
+        "RandomForestClassifier",
+        "mnist",
+        search_model.best_params_,
+        accuracy,
+    )
 
     # 4. (15 points) Repeat the experiment described above using:
     # sklearn.ensemble.GradientBoostingClassifier.
     search_model = GridSearchCV(
         GradientBoostingClassifier(),
-        {
-            "n_estimators": [5, 10, 20],
-            "loss": ['log_loss', 'exponential'],
-            "criterion": ['friedman_mse', 'squared_error'],
-            "max_features": [1.0, 'sqrt', 'log2'],
-            "learning_rate": [0.1, 0.5, 2],
-            "subsample": [0.05, 0.2, 1.0],
-        },
+        GRADIENT_BOOSTING_CLASSIFIER_PARAMS,
     )
 
-    print(f"GradientBoostingClassifier mnist")
-
     search_model.fit(X_valid, y_valid)
-
-    print(f"parameters: {search_model.best_params_}")
 
     model = GradientBoostingClassifier(**search_model.best_params_)
     model.fit([*X_valid, *X_train], [*y_valid, *y_train])
@@ -126,4 +105,9 @@ if __name__ == "__main__":
 
     accuracy = accuracy_score(y_test, predictions)
 
-    print(f"accuracy: {accuracy}")
+    print_table(
+        "GradientBoostingClassifier",
+        "mnist",
+        search_model.best_params_,
+        accuracy,
+    )
