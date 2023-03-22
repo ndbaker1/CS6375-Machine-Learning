@@ -76,7 +76,7 @@ Based on your ML knowledge, why do you think the "classifier" achieved the highe
 
     The RandomForestClassifier has the best general scores for accuracy/F1 score.
 
-    This could be due to the advantage that the Random Forest strategy has over ...
+    This could be due to the advantage that the RandomForest strategy has over data with high dimensionality/feature count, since in RandomForest a subset of feature are selected. 
 
 * (5.b) What is the impact of increasing the amount of training data on the
 accuracy/F1 scores of each of the four classifiers.
@@ -108,15 +108,13 @@ classification accuracy on the MNIST dataset and why?
     which could be due to the advantage that the Random Forest strategy has over data with high dimensions.
 
     Decision trees normally exhibit difficulty locating the best features to split on in order to converge
-    subtrees more quickly. Random Foresting mitigates part of these issues by using several trees with attention
-    to different features to come to a final decision. This helps alleviate overfitting and gives more variety 
-    on higher dimensional data.
+    subtrees more quickly. Random Foresting mitigates part of these issues by using several trees with attention to different features to come to a final decision. This helps alleviate overfitting and gives more variety on higher dimensional data.
 
 * (7) Compare the classification accuracy of tree and ensemble based classifiers with the (best)
 accuracy you obtained using the MLPClassifier, SVMs and nearest-neighbors in Project 2 (best as in after tuning the hyperparameters).
 Which classifier (or classifiers) among the seven has (have) the highest accuracy on the test set and why?
 
-    **Project 2 Metrics:**
+    $$Project2$$
 
     | Classifier | Accuracy | 
     |---|---|
@@ -124,5 +122,10 @@ Which classifier (or classifiers) among the seven has (have) the highest accurac
     | MLP | 0.9287 |
     | KNN | 0.885 |
 
-    The RandomForesetClassifier once again performs the best among the classifiers that we have for
-    this comparison, and likely does so due to ...
+    The RandomForestClassifier once again performs the best among the classifiers that we have for
+    this comparison. 
+
+    Because RandomForest is an improvement over Bagging where subsets of feature are selected, it is better able to handle high dimensional data and is less prone to overfitting. For Boosting there is a similar rationale; in which the weight of all features is difficult to determine with such a high number of options.
+
+    Linear Classifiers may not to achieve below an arbitrary error rate because the mnist dataset is not linearly separable. Support Vectors  and MLP classifiers from project are linear classifiers, so it makes sense that their accuracy may not be able to outperform RandomForest. Finally, k-nearest-neighbors has difficulty with a high number of dimensions/features, which makes the mnist dataset very hard to work with since features of an image are the pixel matrix.
+
