@@ -26,26 +26,38 @@ geometry: margin=1in
 to repeat the experiment multiple times with different initializations and report
 the average as well as variance in the compression ratio.
 
-Using 20 different initializations over each value of K, the resulting mean compression 
-ratio for each K is:
+Using 50 different initializations over each value of K,
+the resulting mean compression ratio for each K is as follows below:
 
+### Koala
 
-| Image | K | Compression Ratio |
-|---|---|---|
-| koala    | 2  |  0.11 |
-| koala    | 5  |  0.19 |
-| koala    | 10 |  0.20 |
-| koala    | 15 |  0.21 |
-| koala    | 20 |  0.21 |
-| penguins | 2  |  0.07 |
-| penguins | 5  |  0.13 |
-| penguins | 10 |  0.14 |
-| penguins | 15 |  0.15 |
-| penguins | 20 |  0.15 |
+| K | Compression Ratio |
+|---|---|
+|  2 | 13.17 | 
+|  5 |  5.33 | 
+| 10 |  5.03 | 
+| 15 |  4.86 | 
+| 20 |  4.81 | 
+
+### Penguins 
+
+| K | Compression Ratio |
+|---|---|
+|  2 | 17.46 | 
+|  5 |  8.17 | 
+| 10 |  7.09 | 
+| 15 |  7.06 | 
+| 20 |  6.53 | 
  
 * Is there a tradeoff between image quality and degree of compression. What
 would be a good value of K for each of the two images?
 
-Yes, there is a decrease in quiality when you increase the amount of compression,
-but a value of $K=10$ is a high level amount of compressions that still returns an
-image which has enough colors to distinguish most, if not all, elements in the image.
+Yes, there is a decrease in image quality when you increase the amount of
+compression (increase the space saved). Compression ratio is highest with
+less diversity of pixels (lower K); however we also see that above a certain
+K the compression ratio doesn't drop as quickly, so we can still have highly 
+detailed images with high compression rates. 
+
+For the **Koala**, ...
+
+For the **Penguins**, ...
