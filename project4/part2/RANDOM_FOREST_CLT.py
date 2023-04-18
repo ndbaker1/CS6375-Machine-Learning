@@ -3,14 +3,14 @@ from Util import *
 from CLT_class import CLT
 
 
-class MIXTURE_CLT():
+class RANDOM_FOREST_CLT():
 
     def __init__(self):
         self.n_components = 0  # number of components
         self.mixture_probs = []  # mixture probabilities
         self.clt_list = []  # List of Tree Bayesian networks
 
-    def learn(self, dataset, n_components=2, max_iter=50, epsilon=1e-5):
+    def learn(self, dataset, n_components=2, r=0, max_iter=50, epsilon=1e-5):
         '''
             Learn Mixtures of Trees using the EM algorithm.
         '''
@@ -62,18 +62,3 @@ class MIXTURE_CLT():
             ll += np.log(prob_sum)
 
         return ll
-
-
-"""
-    After you implement the functions learn and computeLL, you can learn a mixture of trees using
-    To learn Chow-Liu trees, you can use
-    mix_clt=MIXTURE_CLT()
-    ncomponents=10 #number of components
-    max_iter=50 #max number of iterations for EM
-    epsilon=1e-1 #converge if the difference in the log-likelihods between two iterations is smaller 1e-1
-    dataset=Util.load_dataset(path-of-the-file)
-    mix_clt.learn(dataset,ncomponents,max_iter,epsilon)
-    
-    To compute average log likelihood of a dataset w.r.t. the mixture, you can use
-    mix_clt.computeLL(dataset)/dataset.shape[0]
-"""

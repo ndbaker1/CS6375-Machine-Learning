@@ -5,6 +5,7 @@ import numpy as np
 from Util import Util
 from CLT_class import CLT
 from MIXTURE_CLT import MIXTURE_CLT
+from RANDOM_FOREST_CLT import RANDOM_FOREST_CLT
 
 show_df = True
 
@@ -44,6 +45,20 @@ for dataset_name in dataset_names:
     ll = clt.computeLL(test) / test.shape[0]
     print(ll)
     table.append(("MIXTURE_CLT", ll))
+
+    print("running RANDOM_FOREST_CLT... ", end="")
+    clt, ll = RANDOM_FOREST_CLT(), -np.inf
+    for k in (2, 5, 10, 20):
+        clt_ = RANDOM_FOREST_CLT()
+        clt_.learn(train, n_components=k, r=0)
+        # use validation dataset to compare K values
+        ll_ = clt_.computeLL(valid) / valid.shape[0]
+        # keep best performing model
+        if ll_ > ll:
+            clt, ll = clt_, ll_
+    ll = clt.computeLL(test) / test.shape[0]
+    print(ll)
+    table.append(("RANDOM_FOREST_CLT", ll))
 
 if show_df:
     import pandas
