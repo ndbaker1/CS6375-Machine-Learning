@@ -6,44 +6,56 @@ from CLT_class import CLT
 class RANDOM_FOREST_CLT():
 
     def __init__(self):
-        self.n_components = 0  # number of components
-        self.mixture_probs = []  # mixture probabilities
+        self.mixture_probs = []
+        self.bootstrap_sets = []  # bootstrap samples
         self.clt_list = []  # List of Tree Bayesian networks
 
-    def learn(self, dataset, n_components=2, r=0, max_iter=50, epsilon=1e-5):
+    def learn(self, dataset, k, r=0, max_iter=50, epsilon=1e-5):
         '''
             Learn Mixtures of Trees using the EM algorithm.
         '''
-        self.n_components = n_components
-        # For each component and each data point, we have a weight
-        weights = np.zeros((n_components, dataset.shape[0]))
+        weights = np.zeros((k, dataset.shape[0]))
 
         # Randomly initialize the chow-liu trees and the mixture probabilities
         # Your code for random initialization goes here
-        self.mixture_probs = np.random.dirichlet(np.ones(self.n_components))
+        self.mixture_probs = np.random.dirichlet(np.ones(k))
 
-        self.clt_list = [CLT() for _ in range(self.n_components)]
-        for clt in self.clt_list:
-            clt.learn(dataset)
+        # Input dataset D; two integers k and r
+        # /* Dataset D has N examples */
+        # For i =  to k do
+        #   D_i = Generate "N" samples with replacement (this is called bootstrap) from the dataset D
+        #   Use D_i to construct the complete mutual information graph G (complete graph with edges weighted using mutual information)
+        #   G'=Delete r edges randomly from the graph (you can use r as % edges if that helps instead of a number r so that r does not depend on the number of features/variables)
+        #   Construct a Chow-Liu tree using G'
+        # Return a mixture over k chow-liu trees constructed as above. Set the mixture weights appropriately. (read the project description)
+        # For each component and each data point, we have a weight
+        for i in range(k):
+            D = np.random.choice(dataset, size=dataset, replace=True)
+            G = np.random.choice(D, size=len(D) - r, replace=False)
+
+            clt = CLT()
+            clt.learn(G)
+            self.clt_list.append(clt)
+            self.bootstrap_sets.append(G)
 
         current_ll = -np.inf
         for _ in range(max_iter):
             # E-step: Complete the dataset to yield a weighted dataset
             # We store the weights in an array weights[ncomponents,number of points]
-            for i in range(dataset.shape[0]):
-                for j in range(self.n_components):
-                    datapoint_prob = self.clt_list[j].getProb(dataset[i])
+            for i, bootstrap in enumerate(self.bootstrap_sets):
+                for j in range(k):
+                    datapoint_prob = self.clt_list[j].getProb(bootstrap)
                     weights[j, i] = self.mixture_probs[j] * datapoint_prob
                 # normalize weights among dataset for each component
                 weights[:, i] = Util.normalize(weights[:, i])
 
             # M-step: Update the Chow-Liu Trees and the mixture probabilities
-            for i in range(self.n_components):
+            for i in range(k):
                 self.mixture_probs[i] = np.mean(weights[i])
-                self.clt_list[i].update(dataset, weights[i])
+                self.clt_list[i].update(bootstrap, weights[i])
 
             # test for convergence
-            ll_new = self.computeLL(dataset)
+            ll_new = self.computeLL(bootstrap)
             if abs(ll_new - current_ll) < epsilon:
                 break
             current_ll = ll_new
