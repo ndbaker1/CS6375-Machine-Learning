@@ -56,9 +56,9 @@ public class KMeans {
 	 */
 	private static void kmeans(int[] rgb, int k) {
 		// maps each pixel to its designted cluster
-		final int rgbCluster[] = new int[rgb.length];
+		int rgbCluster[] = new int[rgb.length];
 		// store the pixel value of the cluster centers
-		final int clusterCenters[] = new int[k];
+		int clusterCenters[] = new int[k];
 
 		// randomly initialize the clusters
 		for (int i = 0; i < k; i++) {
@@ -68,10 +68,19 @@ public class KMeans {
 		// run the centroid update step until a negligable change
 		int centroid_delta = Integer.MAX_VALUE;
 		while (centroid_delta > 0) {
+			// maps each pixel to its designted cluster
+			final int newRgbCluster[] = new int[rgb.length];
 			// place each rgb value into its closest cluster
 			for (int i = 0; i < rgb.length; i++) {
-				rgbCluster[i] = computeCluster(clusterCenters, rgb[i]);
+				newRgbCluster[i] = computeCluster(clusterCenters, rgb[i]);
 			}
+			// compute the change between the old and new cluster center values
+			centroid_delta = 0;
+			for (int i = 0; i < rgb.length; i++) {
+				centroid_delta += (newRgbCluster[i] != rgbCluster[i]) ? 1 : 0;
+			}
+			// copy over cluster indicies
+			rgbCluster = newRgbCluster;
 
 			// compute the new cluster centroid rgb values
 			final int sum[] = new int[k];
@@ -82,21 +91,13 @@ public class KMeans {
 				count[clusterIndex]++;
 			}
 			final int tempClusterCenters[] = new int[k];
-			for (int i = 0; i < k; k++) {
+			for (int i = 0; i < k; i++) {
 				// check for divide by 0 cases
-				tempClusterCenters[i] = sum[i] / count[i];
-			}
-
-			// compute the change between the old and new cluster center values
-			centroid_delta = 0;
-			for (int i = 0; i < k; k++) {
-				centroid_delta += Math.abs(tempClusterCenters[i] - clusterCenters[i]);
+				tempClusterCenters[i] = count[i] == 0 ? 255 : sum[i] / count[i];
 			}
 
 			// update with the new cluster values
-			for (int i = 0; i < k; k++) {
-				clusterCenters[i] = tempClusterCenters[i];
-			}
+			clusterCenters = tempClusterCenters;
 		}
 
 		// update each index of the rgb array with the centroid
