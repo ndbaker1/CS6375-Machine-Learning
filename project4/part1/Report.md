@@ -33,21 +33,21 @@ the resulting mean compression ratio for each K is as follows below:
 
 | K | Compression Ratio |
 |---|---|
-|  2 | 13.17 | 
-|  5 |  5.33 | 
-| 10 |  5.03 | 
-| 15 |  4.86 | 
-| 20 |  4.81 | 
+| 2  | 7.22 |
+| 5  | 4.93 |
+| 10 | 4.73 |
+| 15 | 4.81 |
+| 20 | 4.89 |
 
 ### Penguins 
 
 | K | Compression Ratio |
 |---|---|
-|  2 | 17.46 | 
-|  5 |  8.17 | 
-| 10 |  7.09 | 
-| 15 |  7.06 | 
-| 20 |  6.53 | 
+| 2  | 11.39 |
+| 5  |  7.41 |
+| 10 |  6.58 |
+| 15 |  6.55 |
+| 20 |  6.47 |
  
 * Is there a tradeoff between image quality and degree of compression. What
 would be a good value of K for each of the two images?

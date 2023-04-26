@@ -66,8 +66,8 @@ public class KMeans {
 		}
 
 		// run the centroid update step until a negligable change
-		int centroid_delta = Integer.MAX_VALUE;
-		while (centroid_delta > 0) {
+		boolean done = false;
+		while (!done) {
 			// maps each pixel to its designted cluster
 			final int newRgbCluster[] = new int[rgb.length];
 			// place each rgb value into its closest cluster
@@ -75,25 +75,38 @@ public class KMeans {
 				newRgbCluster[i] = computeCluster(clusterCenters, rgb[i]);
 			}
 			// compute the change between the old and new cluster center values
-			centroid_delta = 0;
-			for (int i = 0; i < rgb.length; i++) {
-				centroid_delta += (newRgbCluster[i] != rgbCluster[i]) ? 1 : 0;
+			for (int i = 0; i < rgb.length && !done; i++) {
+				if (newRgbCluster[i] != rgbCluster[i]) {
+					done = true;
+				}
 			}
 			// copy over cluster indicies
 			rgbCluster = newRgbCluster;
 
 			// compute the new cluster centroid rgb values
-			final int sum[] = new int[k];
+			final int red[] = new int[k];
+			final int green[] = new int[k];
+			final int blue[] = new int[k];
 			final int count[] = new int[k];
 			for (int i = 0; i < rgb.length; i++) {
 				final int clusterIndex = rgbCluster[i];
-				sum[clusterIndex] += rgb[i];
+				red[clusterIndex] += (rgb[i] >> 16) & 0xff;
+				green[clusterIndex] += (rgb[i] >> 8) & 0xff;
+				blue[clusterIndex] += rgb[i] & 0xff;
 				count[clusterIndex]++;
 			}
+
 			final int tempClusterCenters[] = new int[k];
 			for (int i = 0; i < k; i++) {
 				// check for divide by 0 cases
-				tempClusterCenters[i] = count[i] == 0 ? 255 : sum[i] / count[i];
+				if (count[i] != 0) {
+					final int avgRed = (red[i] / count[i]) << 16;
+					final int avgGreen = (green[i] / count[i]) << 8;
+					final int avgBlue = (blue[i] / count[i]);
+					tempClusterCenters[i] = avgRed | avgGreen | avgBlue;
+				} else {
+					tempClusterCenters[i] = clusterCenters[i];
+				}
 			}
 
 			// update with the new cluster values
