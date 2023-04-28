@@ -17,7 +17,6 @@ print(f"{len(dataset_names)} datasets: {dataset_names}")
 
 # run each algorithm 5 times and compute the average and standard deviation
 
-table = list()
 for dataset_name in dataset_names:
     print(f"loading dataset [{dataset_name}]")
     test, train, valid = [
@@ -29,11 +28,10 @@ for dataset_name in dataset_names:
     clt = CLT()
     clt.learn(train)
     ll = clt.computeLL(test) / test.shape[0]
-    print(ll)
-    table.append(("CLT", ll))
+    print("ll:", ll)
 
     print("running MIXTURE_CLT... ", end="")
-    clt, ll = MIXTURE_CLT(), -np.inf
+    clt, ll, k_opt = MIXTURE_CLT(), -np.inf, 0
     for k in (2, 5, 10, 20):
         clt_ = MIXTURE_CLT()
         clt_.learn(train, n_components=k)
@@ -41,25 +39,20 @@ for dataset_name in dataset_names:
         ll_ = clt_.computeLL(valid) / valid.shape[0]
         # keep best performing model
         if ll_ > ll:
-            clt, ll = clt_, ll_
+            clt, ll, k_opt = clt_, ll_, k
     ll = clt.computeLL(test) / test.shape[0]
-    print(ll)
-    table.append(("MIXTURE_CLT", ll))
+    print("ll:", ll, "k:", k_opt)
 
     print("running RANDOM_FOREST_CLT... ", end="")
-    clt, ll = RANDOM_FOREST_CLT(), -np.inf
+    clt, ll, k_opt, r_opt = RANDOM_FOREST_CLT(), -np.inf, 0, 0
     for k in (2, 5, 10, 20):
-        clt_ = RANDOM_FOREST_CLT()
-        clt_.learn(train, n_components=k, r=0)
-        # use validation dataset to compare K values
-        ll_ = clt_.computeLL(valid) / valid.shape[0]
-        # keep best performing model
-        if ll_ > ll:
-            clt, ll = clt_, ll_
+        for r in (0.05, 0.1, 0.2):
+            clt_ = RANDOM_FOREST_CLT()
+            clt_.learn(train, k, r)
+            # use validation dataset to compare K values
+            ll_ = clt_.computeLL(valid) / valid.shape[0]
+            # keep best performing model
+            if ll_ > ll:
+                clt, ll, k_opt, r_opt = clt_, ll_, k, r
     ll = clt.computeLL(test) / test.shape[0]
-    print(ll)
-    table.append(("RANDOM_FOREST_CLT", ll))
-
-if show_df:
-    import pandas
-    print(pandas.DataFrame(table))
+    print("ll:", ll, "k:", k_opt, "r:", r_opt)

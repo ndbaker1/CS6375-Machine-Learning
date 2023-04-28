@@ -44,7 +44,7 @@ class CLT:
         self.topo_order = []
         self.parents = []
 
-    def learn(self, dataset):
+    def learn(self, dataset, r=0.0):
         '''
             Learn the structure of the Chow-Liu Tree using the given dataset
         '''
@@ -56,6 +56,14 @@ class CLT:
         # compute mutual information score for all pairs of variables
         # weights are multiplied by -1.0 because we compute the minimum spanning tree
         edgemat = Util.compute_MI_prob(self.xyprob, self.xprob) * (-1.0)
+        if r > 0.0:
+            for _ in range(int(len(edgemat) * r)):
+                (x,y) = (
+                    np.random.randint(len(edgemat)),
+                    np.random.randint(len(edgemat[0])),
+                )
+                edgemat[x,y] = 0.0
+
         edgemat[edgemat == 0.0] = 1e-20  # to avoid the case where the tree is not connected
         # compute the minimum spanning tree
         Tree = minimum_spanning_tree(csr_matrix(edgemat))
