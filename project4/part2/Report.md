@@ -4,36 +4,43 @@ author: "Nicholas Baker - ndb180002"
 geometry: margin=1in
 ---
 
-| Dataset | CLT | MIXTURE_CLT | RANDOM_FOREST_CLT |
-|---|---|---|
-| accidents | -33.1881104298622 | -33.1881104298388 | 
-| bnetflix | -60.25034595063276 | -60.25034595063603 | 
-| msnbc | -6.540127355063576 | -6.540127355062914 | 
-| plants | -16.524015044243548 | -16.524015044253023 | 
-| jester | -58.226531938334375 | -58.22653193829282 | 
-| baudio | -44.374902217296565 | -44.37490221728937 | 
-| nltcs | -6.759044665013505 | -6.7590446650148 | 
-| tretail | -10.946544781894685 | -10.946544781902364 | 
-| pumsb_star | -30.807048439578587 | -30.807048439576473 | 
-| kdd | -2.294894071447107 | -2.2948940714524046 | 
+## CLT Results
 
-2. Run the EM algorithm until convergence or until 50 iterations whichever is earlier.
-See section 3 in [Meila and Jordan, 2001]. Use the following values for k ∈ {2, 5, 10, 20}. 
-Test performance using the “test set.”
+| Dataset | LL |
+|---|---|
+| accidents | -33.1881104298622 |
+| baudio | -44.374902217296565 |
+| bnetflix | -60.25034595063276 |
+| jester | -58.226531938334375 |
+| kdd | -2.294894071447107 |
+| msnbc | -6.540127355063576 |
+| nltcs | -6.759044665013505 |
+| plants | -16.524015044243548 |
+| pumsb_star | -30.807048439578587 |
+| tretail | -10.946544781894685 |
 
-3. Learn the structure and parameters of the model using the following Random-Forests style approach.
-Given two hyper-parameters (k, r), generate k sets of Bootstrap samples and
-learn the i-th Tree Bayesian network using the i-th set of the Bootstrap samples
-by randomly setting exactly r mutual information scores to 0 (as before use
-the Chow-Liu algorithm with r mutual information scores set to 0 to learn the
-structure and parameters of the Tree Bayesian network). Select k and r using
-the validation set and use 1-Laplace smoothing. You can either set pi = 1/k
-for all i or use any reasonable method (reasonable method is extra credit).
-Describe your (reasonable) method precisely in your report. Does it improve
-over the baseline approach that uses pi = 1/k.
+## MIXTURE_CLT Results
 
-Report Test-set Log-Likelihood (LL) score on the 10 datasets available on MS
-Teams. For EM and Random Forests (since they are randomized algorithms), choose
-the hyper-parameters (k and r) using the validation set and then run the algorithms
-5 times and report the average and standard deviation. Can you rank the algorithms
-in terms of accuracy (measured using test set LL) based on your experiments? Comment on why you think the ranking makes sense
+| Dataset | Average(LL) | Standard Deviation(LL) | k |
+|---|---|---|---|
+| accidents | -33.119101809351584 | 1.0048591735576161e-14 | 2 |
+| plants | -16.407555344707387 | 2.7519201823675253e-15 | 10 |
+| baudio | -44.15088570654333 | 8.987733679556355e-15 | 10 |
+| msnbc | -6.53862294554448 | 5.859689391140947e-14 | 5 |
+| pumsb_star | -30.79053220491877 | 1.3293037379376718e-14 | 2 |
+| nltcs | -6.748035238472859 | 3.7890986362223954e-15 | 10 |
+| tretail | -10.830404762849858 | 5.148371239083872e-15 | 10 |
+| kdd | -2.1616255338368715 | 3.304692175056504e-14 | 10 |
+| jester | -58.00620886385428 | 7.78360568894479e-15 | 20 |
+| bnetflix | -60.12546818877335 | 1.0048591735576161e-14 | 2 |
+
+
+## RANDOM_FOREST_CLT Results
+
+| Dataset | Average(LL) | Standard Deviation(LL) | k | r |
+|---|---|---|---|---|
+
+## Questions
+
+Can you rank the algorithms in terms of accuracy (measured using test set LL) based on your experiments?
+Comment on why you think the ranking makes sense.
