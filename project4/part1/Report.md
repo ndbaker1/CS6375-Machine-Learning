@@ -40,6 +40,5 @@ would be a good value of K for each of the two images?
     K the compression ratio doesn't drop as quickly, so we can still have highly 
     detailed images with high compression rates. 
 
-    For the **Koala**, ...
-
-    For the **Penguins**, ...
+    For the both the Koala and Penguins a K value of ~15 works to produce an accurate,
+    yet highly compressed image of the original.
