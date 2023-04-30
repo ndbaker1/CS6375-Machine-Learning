@@ -12,6 +12,7 @@ pip install scikit-learn numpy
 ## Run
 
 ```sh
-
+# runs tests for base CLT, MIXTURE_CLT, and RANDOM_FOREST_CLT
+python test.py
 ```
 
